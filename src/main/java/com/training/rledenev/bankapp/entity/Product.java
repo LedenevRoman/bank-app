@@ -1,18 +1,22 @@
 package com.training.rledenev.bankapp.entity;
 
+import com.training.rledenev.bankapp.entity.enums.CurrencyCode;
 import com.training.rledenev.bankapp.entity.enums.Status;
 import javax.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
-@Table(name = "CLIENTS")
+@Table(name = "PRODUCTS")
 @Getter
 @Setter
-public class Client {
+public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, updatable = false)
@@ -26,23 +30,12 @@ public class Client {
     @Column(name = "status")
     private Status status;
 
-    @Column(name = "tax_code")
-    private String taxCode;
+    @Enumerated
+    @Column(name = "currency_code")
+    private CurrencyCode currencyCode;
 
-    @Column(name = "first_name")
-    private String firstName;
-
-    @Column(name = "last_name")
-    private String lastName;
-
-    @Column(name = "email")
-    private String email;
-
-    @Column(name = "address")
-    private String address;
-
-    @Column(name = "phone")
-    private String phone;
+    @Column(name = "interest_rate")
+    private BigDecimal interestRate;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
@@ -50,29 +43,30 @@ public class Client {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @OneToMany(
+            mappedBy = "product",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY
+    )
+    private Set<Agreement> agreements = new HashSet<>();
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Client client = (Client) o;
-        return Objects.equals(id, client.id)
-                && Objects.equals(firstName, client.firstName)
-                && Objects.equals(lastName, client.lastName)
-                && Objects.equals(email, client.email);
+        Product product = (Product) o;
+        return Objects.equals(id, product.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName, email);
+        return Objects.hash(id);
     }
 
     @Override
     public String toString() {
-        return "Client{" +
+        return "Product{" +
                 "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", email='" + email + '\'' +
                 '}';
     }
 }
