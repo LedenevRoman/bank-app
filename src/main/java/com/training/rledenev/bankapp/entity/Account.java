@@ -3,25 +3,23 @@ package com.training.rledenev.bankapp.entity;
 import com.training.rledenev.bankapp.entity.enums.AccountType;
 import com.training.rledenev.bankapp.entity.enums.CurrencyCode;
 import com.training.rledenev.bankapp.entity.enums.Status;
-import javax.persistence.*;
 import lombok.Getter;
-import lombok.Setter;
 
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-import java.util.UUID;
 
 @Entity
-@Table(name = "ACCOUNTS")
+@Table(name = "accounts")
 @Getter
 public class Account {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, updatable = false)
-    private UUID id;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "client_id", referencedColumnName = "id")
@@ -65,10 +63,15 @@ public class Account {
     )
     private Set<Transaction> creditTransactions = new HashSet<>();
 
+    @OneToOne(
+            mappedBy = "account",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY
+    )
+    private Agreement agreement;
 
-    public Account setId(UUID id) {
-        this.id = id;
-        return this;
+    public void setAgreement(Agreement agreement) {
+        this.agreement = agreement;
     }
 
     public Account setClient(Client client) {

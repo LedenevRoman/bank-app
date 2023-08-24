@@ -1,16 +1,16 @@
 package com.training.rledenev.bankapp.entity;
 
 import com.training.rledenev.bankapp.entity.enums.Status;
-import javax.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
-@Table(name = "AGREEMENTS")
+@Table(name = "agreements")
 @Getter
 @Setter
 public class Agreement {
@@ -42,6 +42,31 @@ public class Agreement {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    public void setAccount(Account account) {
+        this.account = account;
+        account.setAgreement(this);
+    }
+
+    public Agreement setInterestRate(BigDecimal interestRate) {
+        this.interestRate = interestRate;
+        return this;
+    }
+
+    public Agreement setStatus(Status status) {
+        this.status = status;
+        return this;
+    }
+
+    public Agreement setSum(BigDecimal sum) {
+        this.sum = sum;
+        return this;
+    }
+
+    public Agreement setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+        return this;
+    }
 
     @Override
     public boolean equals(Object o) {

@@ -13,7 +13,7 @@ import java.util.Set;
 import static javax.persistence.CascadeType.*;
 
 @Entity
-@Table(name = "MANAGERS")
+@Table(name = "managers")
 @Getter
 @Setter
 public class Manager {

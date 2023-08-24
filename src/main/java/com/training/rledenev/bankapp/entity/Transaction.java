@@ -1,24 +1,23 @@
 package com.training.rledenev.bankapp.entity;
 
 import com.training.rledenev.bankapp.entity.enums.TransactionType;
-import javax.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
-import java.util.UUID;
 
 @Entity
-@Table(name = "TRANSACTIONS")
+@Table(name = "transactions")
 @Getter
 @Setter
 public class Transaction {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, updatable = false)
-    private UUID id;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "debit_account_id", referencedColumnName = "id")
