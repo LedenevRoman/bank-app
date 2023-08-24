@@ -28,18 +28,18 @@ public class Account {
     @Column(name = "name")
     private String name;
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     @Column(name = "type")
     private AccountType accountType;
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private Status status;
 
     @Column(name = "balance")
     private BigDecimal balance;
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     @Column(name = "currency_code")
     private CurrencyCode currencyCode;
 

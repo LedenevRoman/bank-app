@@ -11,10 +11,10 @@ import java.util.Objects;
 @Component
 public class AccountDto {
     private String name;
-    private Integer accountType;
-    private Integer status;
+    private String accountType;
+    private String status;
     private Double balance;
-    private Integer currencyCode;
+    private String currencyCode;
 
     @Override
     public boolean equals(Object o) {

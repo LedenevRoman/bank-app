@@ -13,7 +13,7 @@ public class AgreementConverter {
     public Agreement fromDtoToEntity(AgreementDto agreementDto) {
         Agreement agreement = new Agreement();
         return agreement.setInterestRate(BigDecimal.valueOf(agreementDto.getInterestRate()))
-                .setStatus(Status.values()[agreementDto.getStatus()])
+                .setStatus(Status.valueOf(agreementDto.getStatus().toUpperCase()))
                 .setSum(BigDecimal.valueOf(agreementDto.getSum()))
                 .setCreatedAt(LocalDateTime.now());
     }

@@ -15,10 +15,12 @@ public class AccountConverter {
     public Account convertToEntity(AccountDto accountDto) {
         Account account = new Account();
         return account.setName(accountDto.getName())
-                .setAccountType(AccountType.values()[accountDto.getAccountType()])
-                .setStatus(Status.values()[accountDto.getStatus()])
+                .setAccountType(AccountType.valueOf(accountDto.getAccountType().toUpperCase()))
+                .setStatus(Status.valueOf(accountDto.getStatus().toUpperCase()))
                 .setBalance(BigDecimal.valueOf(accountDto.getBalance()))
-                .setCurrencyCode(CurrencyCode.values()[accountDto.getCurrencyCode()])
+                .setCurrencyCode(CurrencyCode.valueOf(accountDto.getCurrencyCode().toUpperCase()))
                 .setCreatedAt(LocalDateTime.now());
     }
+
+
 }

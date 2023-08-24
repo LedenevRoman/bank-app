@@ -30,7 +30,7 @@ public class Agreement {
     @Column(name = "interest_rate")
     private BigDecimal interestRate;
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private Status status;
 

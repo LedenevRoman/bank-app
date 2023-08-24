@@ -9,7 +9,7 @@ import java.util.Objects;
 @Setter
 public class AgreementDto {
     private Double interestRate;
-    private int status;
+    private String status;
     private Double sum;
 
     @Override
@@ -17,8 +17,8 @@ public class AgreementDto {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         AgreementDto that = (AgreementDto) o;
-        return status == that.status
-                && Objects.equals(interestRate, that.interestRate)
+        return Objects.equals(interestRate, that.interestRate)
+                && Objects.equals(status, that.status)
                 && Objects.equals(sum, that.sum);
     }
 

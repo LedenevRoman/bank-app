@@ -27,7 +27,7 @@ public class Transaction {
     @JoinColumn(name = "credit_account_id", referencedColumnName = "id")
     private Account creditAccount;
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     @Column(name = "type")
     private TransactionType type;
 
