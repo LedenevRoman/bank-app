@@ -14,6 +14,6 @@ public class ManagerConverter {
         manager.setCreatedAt(LocalDateTime.now());
         return manager.setFirstName(managerDto.getFirstName())
                 .setLastName(managerDto.getLastName())
-                .setStatus(Status.THREE);
+                .setStatus(Status.ACTIVE);
     }
 }
