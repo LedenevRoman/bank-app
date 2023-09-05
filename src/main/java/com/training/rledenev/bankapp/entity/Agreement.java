@@ -27,9 +27,6 @@ public class Agreement {
     @JoinColumn(name = "product_id", referencedColumnName = "id")
     private Product product;
 
-    @Column(name = "interest_rate")
-    private BigDecimal interestRate;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private Status status;
@@ -46,11 +43,6 @@ public class Agreement {
     public void setAccount(Account account) {
         this.account = account;
         account.setAgreement(this);
-    }
-
-    public Agreement setInterestRate(BigDecimal interestRate) {
-        this.interestRate = interestRate;
-        return this;
     }
 
     public Agreement setStatus(Status status) {

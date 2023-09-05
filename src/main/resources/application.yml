@@ -1,10 +1,7 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/
+    url: jdbc:mysql://localhost:3306/bank_app_db?createDatabaseIfNotExist=true
     driver-class-name: com.mysql.cj.jdbc.Driver
-  flyway:
-    default-schema: bank_app_db
-    create-schemas: true
   jpa:
     defer-datasource-initialization: false
     open-in-view: false

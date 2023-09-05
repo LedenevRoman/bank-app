@@ -8,7 +8,6 @@ import java.util.Objects;
 @Getter
 @Setter
 public class AgreementDto {
-    private Double interestRate;
     private String status;
     private Double sum;
 
@@ -17,21 +16,19 @@ public class AgreementDto {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         AgreementDto that = (AgreementDto) o;
-        return Objects.equals(interestRate, that.interestRate)
-                && Objects.equals(status, that.status)
+        return Objects.equals(status, that.status)
                 && Objects.equals(sum, that.sum);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(interestRate, status, sum);
+        return Objects.hash(status, sum);
     }
 
     @Override
     public String toString() {
         return "AgreementDto{" +
-                "interestRate=" + interestRate +
-                ", status=" + status +
+                "status='" + status + '\'' +
                 ", sum=" + sum +
                 '}';
     }

@@ -1,11 +1,12 @@
 package com.training.rledenev.bankapp.entity;
 
 import com.training.rledenev.bankapp.entity.enums.CurrencyCode;
+import com.training.rledenev.bankapp.entity.enums.ProductType;
 import com.training.rledenev.bankapp.entity.enums.Status;
-import javax.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -21,6 +22,10 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, updatable = false)
     private Long id;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type")
+    private ProductType type;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "manager_id", referencedColumnName = "id")
