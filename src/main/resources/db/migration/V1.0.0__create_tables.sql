@@ -1,43 +1,28 @@
-CREATE TABLE IF NOT EXISTS MANAGERS
-(
-    id         INT PRIMARY KEY AUTO_INCREMENT,
-    first_name varchar(50),
-    last_name  varchar(50),
-    status     varchar(20),
-    created_at TIMESTAMP,
-    updated_at TIMESTAMP
-);
-
-CREATE TABLE IF NOT EXISTS CLIENTS
+CREATE TABLE IF NOT EXISTS users
 (
     id         int PRIMARY KEY AUTO_INCREMENT,
-    manager_id int,
+    role       varchar(20),
     status     varchar(20),
-    tax_code   varchar(20),
+    password   varchar(50),
     first_name varchar(50),
     last_name  varchar(50),
     email      varchar(60),
     address    varchar(80),
     phone      varchar(20),
     created_at TIMESTAMP,
-    updated_at TIMESTAMP,
-    FOREIGN KEY (manager_id) REFERENCES managers (id)
+    updated_at TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS PRODUCTS
+CREATE TABLE IF NOT EXISTS products
 (
-    id            INT PRIMARY KEY AUTO_INCREMENT,
-    manager_id    int,
-    type          varchar(70),
-    status        varchar(20),
-    currency_code varchar(20),
-    interest_rate decimal(6, 4),
-    created_at    TIMESTAMP,
-    updated_at    TIMESTAMP,
-    FOREIGN KEY (manager_id) REFERENCES managers (id)
+    id         INT PRIMARY KEY AUTO_INCREMENT,
+    type       varchar(70),
+    status     varchar(20),
+    created_at TIMESTAMP,
+    updated_at TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS ACCOUNTS
+CREATE TABLE IF NOT EXISTS accounts
 (
     id            INT PRIMARY KEY AUTO_INCREMENT,
     client_id     int,
@@ -48,23 +33,26 @@ CREATE TABLE IF NOT EXISTS ACCOUNTS
     currency_code varchar(3),
     created_at    TIMESTAMP,
     updated_at    TIMESTAMP,
-    FOREIGN KEY (client_id) REFERENCES clients (id)
+    FOREIGN KEY (client_id) REFERENCES users (id)
 );
 
-CREATE TABLE IF NOT EXISTS AGREEMENTS
+CREATE TABLE IF NOT EXISTS agreements
 (
     id            INT PRIMARY KEY AUTO_INCREMENT,
     account_id    int,
     product_id    int,
+    manager_id    int,
+    interest_rate decimal(6, 4),
     status        varchar(20),
     sum           decimal(15, 2),
     created_at    TIMESTAMP,
     updated_at    TIMESTAMP,
     FOREIGN KEY (account_id) REFERENCES accounts (id),
-    FOREIGN KEY (product_id) REFERENCES products (id)
+    FOREIGN KEY (product_id) REFERENCES products (id),
+    FOREIGN KEY (manager_id) REFERENCES users (id)
 );
 
-CREATE TABLE IF NOT EXISTS TRANSACTIONS
+CREATE TABLE IF NOT EXISTS transactions
 (
     id                INT PRIMARY KEY AUTO_INCREMENT,
     debit_account_id  int,

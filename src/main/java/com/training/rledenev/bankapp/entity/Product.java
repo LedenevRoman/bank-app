@@ -1,13 +1,11 @@
 package com.training.rledenev.bankapp.entity;
 
-import com.training.rledenev.bankapp.entity.enums.CurrencyCode;
 import com.training.rledenev.bankapp.entity.enums.ProductType;
 import com.training.rledenev.bankapp.entity.enums.Status;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Objects;
@@ -27,20 +25,9 @@ public class Product {
     @Column(name = "type")
     private ProductType type;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "manager_id", referencedColumnName = "id")
-    private Manager manager;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private Status status;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "currency_code")
-    private CurrencyCode currencyCode;
-
-    @Column(name = "interest_rate")
-    private BigDecimal interestRate;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;

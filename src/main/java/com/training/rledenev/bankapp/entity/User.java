@@ -1,33 +1,38 @@
 package com.training.rledenev.bankapp.entity;
 
+import com.training.rledenev.bankapp.entity.enums.Role;
 import com.training.rledenev.bankapp.entity.enums.Status;
-import javax.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
+
+import static javax.persistence.CascadeType.*;
 
 @Entity
-@Table(name = "clients")
+@Table(name = "users")
 @Getter
 @Setter
-public class Client {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, updatable = false)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "manager_id", referencedColumnName = "id")
-    private Manager manager;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role")
+    private Role role;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private Status status;
 
-    @Column(name = "tax_code")
-    private String taxCode;
+    @Column(name = "password", nullable = false)
+    private String password;
 
     @Column(name = "first_name")
     private String firstName;
@@ -50,15 +55,29 @@ public class Client {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @OneToMany(
+            mappedBy = "client",
+            cascade = {MERGE, PERSIST, REFRESH},
+            fetch = FetchType.LAZY
+    )
+    private Set<Account> clientAccounts = new HashSet<>();
+
+    @OneToMany(
+            mappedBy = "manager",
+            cascade = {MERGE, PERSIST, REFRESH},
+            fetch = FetchType.LAZY
+    )
+    private Set<Agreement> managerAgreements = new HashSet<>();
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Client client = (Client) o;
-        return Objects.equals(id, client.id)
-                && Objects.equals(firstName, client.firstName)
-                && Objects.equals(lastName, client.lastName)
-                && Objects.equals(email, client.email);
+        User user = (User) o;
+        return Objects.equals(id, user.id)
+                && Objects.equals(firstName, user.firstName)
+                && Objects.equals(lastName, user.lastName)
+                && Objects.equals(email, user.email);
     }
 
     @Override
@@ -68,7 +87,7 @@ public class Client {
 
     @Override
     public String toString() {
-        return "Client{" +
+        return "User{" +
                 "id=" + id +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +

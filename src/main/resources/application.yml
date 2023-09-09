@@ -1,10 +1,14 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/bank_app_db?createDatabaseIfNotExist=true
+    url: ${datasource.url}?createDatabaseIfNotExist=true
+    username: ${datasource.username}
+    password: ${datasource.password}
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     defer-datasource-initialization: false
     open-in-view: false
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQL57Dialect
+bot:
+  name: ${bot.name}
+  token: ${bot.token}
+jwt:
+  secret: ${jwt.secret}

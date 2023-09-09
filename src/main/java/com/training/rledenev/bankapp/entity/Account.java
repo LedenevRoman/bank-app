@@ -23,7 +23,7 @@ public class Account {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "client_id", referencedColumnName = "id")
-    private Client client;
+    private User client;
 
     @Column(name = "name")
     private String name;
@@ -74,8 +74,8 @@ public class Account {
         this.agreement = agreement;
     }
 
-    public Account setClient(Client client) {
-        this.client = client;
+    public Account setClient(User user) {
+        this.client = user;
         return this;
     }
 

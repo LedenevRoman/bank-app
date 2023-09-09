@@ -1,4 +1,4 @@
 package com.training.rledenev.bankapp.dto;
 
-public class ClientDto {
+public class UserDto {
 }

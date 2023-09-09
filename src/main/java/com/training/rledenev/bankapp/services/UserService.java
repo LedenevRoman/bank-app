@@ -1,4 +1,4 @@
 package com.training.rledenev.bankapp.services;
 
-public interface ClientService {
+public interface UserService {
 }

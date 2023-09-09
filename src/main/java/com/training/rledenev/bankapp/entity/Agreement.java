@@ -27,6 +27,13 @@ public class Agreement {
     @JoinColumn(name = "product_id", referencedColumnName = "id")
     private Product product;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "manager_id", referencedColumnName = "id")
+    private User manager;
+
+    @Column(name = "interest_rate")
+    private BigDecimal interestRate;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private Status status;
