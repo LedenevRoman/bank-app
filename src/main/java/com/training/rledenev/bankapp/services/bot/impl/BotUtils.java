@@ -5,34 +5,43 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMar
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 public final class BotUtils {
     static final String START = "/start";
+    static final String WELCOME_MESSAGE = "Welcome to banking application!";
     static final String EXIT = "Exit";
     static final String REGISTER_USER = "Register";
     static final String LOG_IN = "Log in";
     static final String UNKNOWN_INPUT_MESSAGE = "Sorry, I don't know how to handle such command yet :(";
-    static final String ENTER_YOUR_EMAIL = "Please, enter your email:";
-    static final String MEAL_REPORT_MESSAGE = ", your meal contains: ";
-    static final String DONE = "Done :)";
-    static final String REGISTER_PRODUCT = "Please, enter information about 100 grams or milliliters of " +
-            "product (name/calories/proteins/fats/carbohydrates)" + "\n" +
-            "For example: CocaCola/123/4.5/6.7/8.901";
-    static final String ADD_PRODUCT_TO_MEAL = "Please, enter the name of the product and the amount of " +
-            "grams or milliliters (product name/grams)" + "\n" +
-            "For example: CocaCola/123";
-    static final String PRODUCT_NOT_FOUND = "Sorry :( I don't found this product. Please, could you add this product?";
-    static final String ANOTHER_PRODUCT_OR_COMPLETE = "Add another product or complete meal?";
-    static final String MEAL_PRODUCT_CHOOSE = "Please, select what you want to enter:";
-    static final String NEW_MEAL = "New meal";
-    static final String NEW_PRODUCT = "New product";
-    static final String TODAY_TOTAL = "Today total";
-    static final String TODAY_REMAINDER = "Today remainder";
-    static final String ADD_ANOTHER_PRODUCT = "Add another product";
-    static final String COMPLETE_MEAL = "Complete";
+    static final String ENTER_FIRST_NAME = "Please, enter your first name:";
+    static final String ENTER_LAST_NAME = "Please, enter your last name:";
+    static final String ENTER_PHONE = "Please, enter your phone number:";
+    static final String ENTER_ADDRESS = "Please, enter your address:";
+    static final String ENTER_EMAIL = "Please, enter your email:";
+    static final String ENTER_PASSWORD = "Please, enter your password:";
+    static final String INCORRECT_NAME = "The name must contain only letters of the English alphabet."
+            + "\n"
+            + "Please, enter correct name:";
+    static final String INCORRECT_PHONE = "The phone number must starts with '+', and contain only numbers and hyphens."
+            + "\n"
+            + "Please, enter correct phone number:";
+    static final String INCORRECT_ADDRESS = "Address is incorrect."
+            + "\n"
+            + "Please, enter correct address:";
+    static final String INCORRECT_EMAIL = "Email is incorrect."
+            + "\n"
+            + "Please, enter correct email:";
+    static final String INCORRECT_PASSWORD = "The password is incorrect. Password is required to contain only English "
+            + "alphabet characters at least one uppercase and one lowercase, also one digit and one special character."
+            + "\n"
+            + "Please, enter correct password:";
+    static final String REGISTRATION_COMPLETED = "Registration is completed";
+    static final String AUTHENTICATION_FAILED = "Email or password is incorrect";
+    static final String AUTHENTICATION_COMPLETED = "Good afternoon %s %s!";
+    static final String SESSION_CLOSED = "Session was expired, please log in";
+
 
     private BotUtils() {
     }
@@ -59,29 +68,5 @@ public final class BotUtils {
 
         sendMessage.setReplyMarkup(keyboardMarkup);
         return sendMessage;
-    }
-
-    public static String createReportMessage(String firstName, String message, BigDecimal calories,
-                                             BigDecimal proteins, BigDecimal fats, BigDecimal carbohydrates) {
-        return "Dear, " + firstName +
-                message +
-                calories +
-                " kilocalories, " +
-                proteins +
-                " proteins, " +
-                fats +
-                " fats, " +
-                carbohydrates +
-                " carbohydrates" +
-                "\n" +
-                "\n";
-    }
-
-    public static List<String> getMainMenuChooseButtons() {
-        return List.of(NEW_MEAL, NEW_PRODUCT, TODAY_TOTAL, TODAY_REMAINDER, EXIT);
-    }
-
-    public static List<String> getAnotherProductOrCompleteButtons() {
-        return List.of(ADD_ANOTHER_PRODUCT, COMPLETE_MEAL);
     }
 }

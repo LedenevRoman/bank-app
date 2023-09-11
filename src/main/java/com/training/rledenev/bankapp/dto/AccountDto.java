@@ -2,13 +2,11 @@ package com.training.rledenev.bankapp.dto;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.stereotype.Component;
 
 import java.util.Objects;
 
 @Getter
 @Setter
-@Component
 public class AccountDto {
     private String name;
     private String accountType;

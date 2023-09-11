@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS users
     id         int PRIMARY KEY AUTO_INCREMENT,
     role       varchar(20),
     status     varchar(20),
-    password   varchar(50),
+    password   varchar(70),
     first_name varchar(50),
     last_name  varchar(50),
     email      varchar(60),
