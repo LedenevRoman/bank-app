@@ -22,7 +22,7 @@ public class AgreementController {
 
     @PostMapping("/create")
     public ResponseEntity<Long> createManager(@RequestBody AgreementDto agreementDto) {
-        Agreement agreement = agreementService.createAccount(agreementDto);
+        Agreement agreement = agreementService.createNewAgreement(agreementDto);
         return ResponseEntity.created(URI.create("/" + agreement.getId())).body(agreement.getId());
     }
 }

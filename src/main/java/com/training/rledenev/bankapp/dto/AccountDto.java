@@ -9,7 +9,7 @@ import java.util.Objects;
 @Setter
 public class AccountDto {
     private String name;
-    private String accountType;
+    private String type;
     private String status;
     private Double balance;
     private String currencyCode;
@@ -20,7 +20,7 @@ public class AccountDto {
         if (o == null || getClass() != o.getClass()) return false;
         AccountDto that = (AccountDto) o;
         return Objects.equals(name, that.name)
-                && Objects.equals(accountType, that.accountType)
+                && Objects.equals(type, that.type)
                 && Objects.equals(status, that.status)
                 && Objects.equals(balance, that.balance)
                 && Objects.equals(currencyCode, that.currencyCode);
@@ -28,14 +28,14 @@ public class AccountDto {
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, accountType, status, balance, currencyCode);
+        return Objects.hash(name, type, status, balance, currencyCode);
     }
 
     @Override
     public String toString() {
         return "AccountDto{" +
                 "name='" + name + '\'' +
-                ", accountType=" + accountType +
+                ", accountType=" + type +
                 ", status=" + status +
                 ", balance=" + balance +
                 ", currencyCode=" + currencyCode +

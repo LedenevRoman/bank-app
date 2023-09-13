@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 @Mapper(componentModel = "spring")
 public interface AccountMapper {
 
-    @Mapping(source = "accountType", target = "accountType", qualifiedByName = "stringToUpperCase")
+    @Mapping(source = "type", target = "type", qualifiedByName = "stringToUpperCase")
     @Mapping(source = "status", target = "status", qualifiedByName = "stringToUpperCase")
     @Mapping(source = "currencyCode", target = "currencyCode", qualifiedByName = "stringToUpperCase")
     @Mapping(source = "balance", target = "balance", qualifiedByName = "doubleToBigDecimal",

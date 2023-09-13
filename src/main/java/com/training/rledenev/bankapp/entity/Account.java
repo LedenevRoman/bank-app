@@ -1,9 +1,10 @@
 package com.training.rledenev.bankapp.entity;
 
-import com.training.rledenev.bankapp.entity.enums.AccountType;
 import com.training.rledenev.bankapp.entity.enums.CurrencyCode;
+import com.training.rledenev.bankapp.entity.enums.ProductType;
 import com.training.rledenev.bankapp.entity.enums.Status;
 import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -15,6 +16,7 @@ import java.util.Set;
 @Entity
 @Table(name = "accounts")
 @Getter
+@Setter
 public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,7 +32,7 @@ public class Account {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "type")
-    private AccountType accountType;
+    private ProductType type;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
@@ -69,60 +71,6 @@ public class Account {
             fetch = FetchType.LAZY
     )
     private Agreement agreement;
-
-    public void setAgreement(Agreement agreement) {
-        this.agreement = agreement;
-    }
-
-    public Account setClient(User user) {
-        this.client = user;
-        return this;
-    }
-
-    public Account setName(String name) {
-        this.name = name;
-        return this;
-    }
-
-    public Account setAccountType(AccountType accountType) {
-        this.accountType = accountType;
-        return this;
-    }
-
-    public Account setStatus(Status status) {
-        this.status = status;
-        return this;
-    }
-
-    public Account setBalance(BigDecimal balance) {
-        this.balance = balance;
-        return this;
-    }
-
-    public Account setCurrencyCode(CurrencyCode currencyCode) {
-        this.currencyCode = currencyCode;
-        return this;
-    }
-
-    public Account setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-        return this;
-    }
-
-    public Account setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-        return this;
-    }
-
-    public Account setDebitTransactions(Set<Transaction> debitTransactions) {
-        this.debitTransactions = debitTransactions;
-        return this;
-    }
-
-    public Account setCreditTransactions(Set<Transaction> creditTransactions) {
-        this.creditTransactions = creditTransactions;
-        return this;
-    }
 
     @Override
     public boolean equals(Object o) {

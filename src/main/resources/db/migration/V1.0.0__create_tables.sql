@@ -15,11 +15,14 @@ CREATE TABLE IF NOT EXISTS users
 
 CREATE TABLE IF NOT EXISTS products
 (
-    id         INT PRIMARY KEY AUTO_INCREMENT,
-    type       varchar(70),
-    status     varchar(20),
-    created_at TIMESTAMP,
-    updated_at TIMESTAMP
+    id            INT PRIMARY KEY AUTO_INCREMENT,
+    type          varchar(70),
+    status        varchar(20),
+    interest_rate decimal(6, 4),
+    max_limit     int,
+    period_months int,
+    created_at    TIMESTAMP,
+    updated_at    TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS accounts
@@ -38,15 +41,14 @@ CREATE TABLE IF NOT EXISTS accounts
 
 CREATE TABLE IF NOT EXISTS agreements
 (
-    id            INT PRIMARY KEY AUTO_INCREMENT,
-    account_id    int,
-    product_id    int,
-    manager_id    int,
-    interest_rate decimal(6, 4),
-    status        varchar(20),
-    sum           decimal(15, 2),
-    created_at    TIMESTAMP,
-    updated_at    TIMESTAMP,
+    id         INT PRIMARY KEY AUTO_INCREMENT,
+    account_id int,
+    product_id int,
+    manager_id int,
+    status     varchar(20),
+    sum        decimal(15, 2),
+    created_at TIMESTAMP,
+    updated_at TIMESTAMP,
     FOREIGN KEY (account_id) REFERENCES accounts (id),
     FOREIGN KEY (product_id) REFERENCES products (id),
     FOREIGN KEY (manager_id) REFERENCES users (id)

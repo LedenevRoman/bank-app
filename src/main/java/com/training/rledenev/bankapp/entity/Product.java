@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Objects;
@@ -29,6 +30,15 @@ public class Product {
     @Column(name = "status")
     private Status status;
 
+    @Column(name = "interest_rate")
+    private BigDecimal interestRate;
+
+    @Column(name = "max_limit")
+    private Integer maxLimit;
+
+    @Column(name = "period_months")
+    private Integer periodMonths;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
@@ -41,6 +51,10 @@ public class Product {
             fetch = FetchType.LAZY
     )
     private Set<Agreement> agreements = new HashSet<>();
+
+    public void addAgreement(Agreement agreement) {
+        this.agreements.add(agreement);
+    }
 
     @Override
     public boolean equals(Object o) {

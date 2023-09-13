@@ -31,17 +31,18 @@ public class LogInUserServiceImpl implements LogInUserService {
             User user;
             try {
                 user = userService.findByEmailAndPassword(CHAT_ID_EMAIL_MAP.get(chatId), messageText);
-                CHAT_ID_EMAIL_MAP.remove(chatId);
-                UpdateHandlerServiceImpl.CHAT_ID_IS_IN_LOGIN_MAP.put(chatId, false);
             } catch (AuthenticationException e) {
                 SendMessage sendMessage = createSendMessage(chatId, AUTHENTICATION_FAILED);
                 return BotUtils.addButtonsToMessage(sendMessage, List.of(REGISTER_USER, LOG_IN));
+            } finally {
+                CHAT_ID_EMAIL_MAP.remove(chatId);
+                UpdateHandlerServiceImpl.CHAT_ID_IS_IN_LOGIN_MAP.put(chatId, false);
             }
             String token = jwtProvider.generateToken(user.getEmail());
             UpdateHandlerServiceImpl.CHAT_ID_TOKEN_MAP.put(chatId, token);
             SendMessage sendMessage = createSendMessage(chatId, String.format(AUTHENTICATION_COMPLETED,
-                    user.getFirstName(), user.getLastName()));
-            return BotUtils.addButtonsToMessage(sendMessage, List.of(EXIT));
+                    user.getFirstName(), user.getLastName()) + SELECT_ACTION);
+            return BotUtils.addButtonsToMessage(sendMessage, getListOfActions());
         } else {
             CHAT_ID_EMAIL_MAP.put(chatId, messageText);
             return createSendMessage(chatId, ENTER_PASSWORD);

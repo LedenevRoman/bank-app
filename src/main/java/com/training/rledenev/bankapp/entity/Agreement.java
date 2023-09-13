@@ -31,9 +31,6 @@ public class Agreement {
     @JoinColumn(name = "manager_id", referencedColumnName = "id")
     private User manager;
 
-    @Column(name = "interest_rate")
-    private BigDecimal interestRate;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private Status status;
@@ -47,24 +44,14 @@ public class Agreement {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    public void setProduct(Product product) {
+        this.product = product;
+        product.addAgreement(this);
+    }
+
     public void setAccount(Account account) {
         this.account = account;
         account.setAgreement(this);
-    }
-
-    public Agreement setStatus(Status status) {
-        this.status = status;
-        return this;
-    }
-
-    public Agreement setSum(BigDecimal sum) {
-        this.sum = sum;
-        return this;
-    }
-
-    public Agreement setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-        return this;
     }
 
     @Override

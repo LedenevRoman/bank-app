@@ -105,7 +105,7 @@ public class RegistrationUserServiceImpl implements RegistrationUserService {
             CHAT_ID_USER_DTO_MAP.remove(chatId, userDto);
             UpdateHandlerServiceImpl.CHAT_ID_IS_IN_REGISTRATION_MAP.put(chatId, false);
             SendMessage sendMessage = createSendMessage(chatId, REGISTRATION_COMPLETED);
-            return BotUtils.addButtonsToMessage(sendMessage, List.of(REGISTER_USER, LOG_IN));
+            return addButtonsToMessage(sendMessage, List.of(REGISTER_USER, LOG_IN));
         } else {
             return createSendMessage(chatId, INCORRECT_PASSWORD);
         }

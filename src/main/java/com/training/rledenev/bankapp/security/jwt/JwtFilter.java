@@ -32,13 +32,17 @@ public class JwtFilter extends GenericFilterBean {
                          FilterChain filterChain) throws IOException, ServletException {
         String token = getTokenFromRequest((HttpServletRequest) servletRequest);
         if (token != null && jwtProvider.validateToken(token)) {
-            String email = jwtProvider.getEmailFromToken(token);
-            CustomUserDetails customUserDetails = userDetailsService.loadUserByUsername(email);
-            UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(customUserDetails,
-                    null, customUserDetails.getAuthorities());
-            SecurityContextHolder.getContext().setAuthentication(auth);
+            setCustomUserDetailsToSecurityContextHolder(token);
         }
         filterChain.doFilter(servletRequest, servletResponse);
+    }
+
+    public void setCustomUserDetailsToSecurityContextHolder(String token) {
+        String email = jwtProvider.getEmailFromToken(token);
+        CustomUserDetails customUserDetails = userDetailsService.loadUserByUsername(email);
+        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(customUserDetails,
+                null, customUserDetails.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(auth);
     }
 
     private String getTokenFromRequest(HttpServletRequest request) {
