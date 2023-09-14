@@ -4,6 +4,7 @@ import com.training.rledenev.bankapp.security.jwt.JwtFilter;
 import com.training.rledenev.bankapp.security.jwt.JwtProvider;
 import com.training.rledenev.bankapp.services.bot.AuthorizedUserService;
 import com.training.rledenev.bankapp.services.bot.action.ActionMessageHandlerService;
+import com.training.rledenev.bankapp.services.bot.action.impl.CurrencyRatesHandlerService;
 import com.training.rledenev.bankapp.services.bot.action.impl.ProductMessageHandlerService;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -20,6 +21,7 @@ public class AuthorizedUserServiceImpl implements AuthorizedUserService {
     public static final Map<Long, String> CHAT_ID_ACTION_NAME_MAP = new HashMap<>();
     static final Map<String, ActionMessageHandlerService> NAME_ACTION_MAP = new HashMap<>();
     private final ProductMessageHandlerService productMessageHandlerService;
+    private final CurrencyRatesHandlerService currencyRatesHandlerService;
     private final JwtProvider jwtProvider;
     private final JwtFilter jwtFilter;
 
@@ -27,11 +29,14 @@ public class AuthorizedUserServiceImpl implements AuthorizedUserService {
     @PostConstruct
     private void init() {
         NAME_ACTION_MAP.put(PRODUCTS, productMessageHandlerService);
+        NAME_ACTION_MAP.put(CURRENCY_RATES, currencyRatesHandlerService);
     }
 
-    public AuthorizedUserServiceImpl(ProductMessageHandlerService productMessageHandlerService, JwtProvider jwtProvider,
+    public AuthorizedUserServiceImpl(ProductMessageHandlerService productMessageHandlerService,
+                                     CurrencyRatesHandlerService currencyRatesHandlerService, JwtProvider jwtProvider,
                                      JwtFilter jwtFilter) {
         this.productMessageHandlerService = productMessageHandlerService;
+        this.currencyRatesHandlerService = currencyRatesHandlerService;
         this.jwtProvider = jwtProvider;
         this.jwtFilter = jwtFilter;
     }

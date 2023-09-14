@@ -38,6 +38,9 @@ public class Agreement {
     @Column(name = "sum")
     private BigDecimal sum;
 
+    @Column(name = "period_months")
+    private Integer periodMonths;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 

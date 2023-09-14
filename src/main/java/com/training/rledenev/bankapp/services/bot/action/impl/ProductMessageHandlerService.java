@@ -3,7 +3,6 @@ package com.training.rledenev.bankapp.services.bot.action.impl;
 import com.training.rledenev.bankapp.dto.AgreementDto;
 import com.training.rledenev.bankapp.entity.Agreement;
 import com.training.rledenev.bankapp.entity.Product;
-import com.training.rledenev.bankapp.entity.enums.CurrencyCode;
 import com.training.rledenev.bankapp.exceptions.ProductNotFoundException;
 import com.training.rledenev.bankapp.services.AgreementService;
 import com.training.rledenev.bankapp.services.ProductService;
@@ -13,7 +12,6 @@ import com.training.rledenev.bankapp.services.bot.impl.BotUtils;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,14 +50,10 @@ public class ProductMessageHandlerService implements ActionMessageHandlerService
                 AgreementDto agreementDto = new AgreementDto();
                 agreementDto.setProductType(message);
                 CHAT_ID_AGREEMENT_DTO_MAP.put(chatId, agreementDto);
-                List<String> currenciesButtons = Arrays.stream(CurrencyCode.values())
-                        .map(Enum::toString)
-                        .collect(Collectors.toList());
                 List<Product> allProductsWithType = productService.getActiveProductsWithType(message);
                 String response = getAllProductsWithTypeListMessage(message, allProductsWithType);
                 SendMessage sendMessage = createSendMessage(chatId, response);
-                currenciesButtons.add(BACK);
-                return addButtonsToMessage(sendMessage, currenciesButtons);
+                return addButtonsToMessage(sendMessage, getCurrencyButtons());
             }
             return createSendMessage(chatId, UNKNOWN_INPUT_MESSAGE);
         } else {
@@ -67,27 +61,44 @@ public class ProductMessageHandlerService implements ActionMessageHandlerService
             if (agreementDto.getCurrencyCode() == null) {
                 agreementDto.setCurrencyCode(message);
                 return createSendMessage(chatId, ENTER_AMOUNT);
-            } else {
+            }
+            if (agreementDto.getSum() == null) {
                 try {
                     agreementDto.setSum(Double.parseDouble(message));
-                    Agreement agreement = agreementService.createNewAgreement(agreementDto);
-                    CHAT_ID_AGREEMENT_DTO_MAP.remove(chatId);
-                    AuthorizedUserServiceImpl.CHAT_ID_ACTION_NAME_MAP.remove(chatId);
-                    String response = getNewAgreementMessage(agreement);
-                    SendMessage sendMessage = createSendMessage(chatId, response);
-                    return BotUtils.addButtonsToMessage(sendMessage, getListOfActions());
+                    return createSendMessage(chatId, ENTER_MINIMAL_PERIOD);
                 } catch (NumberFormatException e) {
                     return createSendMessage(chatId, INCORRECT_NUMBER);
-                } catch (ProductNotFoundException e) {
-                    return createSendMessage(chatId, e.getMessage() + "\n" + ENTER_AMOUNT);
                 }
+            }
+            if (agreementDto.getPeriodMonths() == null) {
+                try {
+                    agreementDto.setPeriodMonths(Integer.parseInt(message));
+                    Product product = productService.getSuitableProduct(agreementDto);
+                    agreementDto.setProductId(product.getId());
+                    SendMessage sendMessage = createSendMessage(chatId, String.format(SUITABLE_PRODUCT,
+                            product.getName(), product.getInterestRate().doubleValue()));
+                    return addButtonsToMessage(sendMessage, List.of(CONFIRM, BACK));
+                } catch (NumberFormatException e) {
+                    return createSendMessage(chatId, INCORRECT_NUMBER_INT);
+                } catch (ProductNotFoundException e) {
+                    CHAT_ID_AGREEMENT_DTO_MAP.remove(chatId);
+                    SendMessage sendMessage = createSendMessage(chatId, e.getMessage() + "\n" + SELECT_ACTION);
+                    return BotUtils.addButtonsToMessage(sendMessage, getListOfActions());
+                }
+            } else {
+                Agreement agreement = agreementService.createNewAgreement(agreementDto);
+                CHAT_ID_AGREEMENT_DTO_MAP.remove(chatId);
+                AuthorizedUserServiceImpl.CHAT_ID_ACTION_NAME_MAP.remove(chatId);
+                String response = getNewAgreementMessage(agreement);
+                SendMessage sendMessage = createSendMessage(chatId, response);
+                return BotUtils.addButtonsToMessage(sendMessage, getListOfActions());
             }
         }
     }
 
     private String getNewAgreementMessage(Agreement agreement) {
         return String.format(AGREEMENT_DONE, agreement.getProduct().getType().toString(), agreement.getSum().toString(),
-                agreement.getAccount().getCurrencyCode(), agreement.getProduct().getPeriodMonths());
+                agreement.getAccount().getCurrencyCode(), agreement.getPeriodMonths());
     }
 
     private static String getAllProductsWithTypeListMessage(String message, List<Product> allProductsWithType) {
@@ -95,9 +106,8 @@ public class ProductMessageHandlerService implements ActionMessageHandlerService
         for (int i = 0; i < allProductsWithType.size(); i++) {
             Product product = allProductsWithType.get(i);
             stringBuilder.append(i + 1)
-                    .append(". ")
-                    .append(String.format(PRODUCT_INFO, product.getMaxLimit(), product.getInterestRate().doubleValue(),
-                            product.getPeriodMonths()))
+                    .append(String.format(PRODUCT_INFO, product.getName(), product.getMaxLimit(),
+                            product.getInterestRate().doubleValue(), product.getPeriodMonths()))
                     .append("\n");
         }
         stringBuilder.append("\n")

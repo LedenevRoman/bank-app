@@ -9,4 +9,6 @@ public class AgreementDto {
     private Double sum;
     private String productType;
     private String currencyCode;
+    private Integer periodMonths;
+    private Long productId;
 }

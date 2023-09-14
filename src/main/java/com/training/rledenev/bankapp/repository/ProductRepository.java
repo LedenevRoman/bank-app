@@ -15,9 +15,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query(value =
             "SELECT * FROM products p " +
-            "WHERE p.type = :type AND p.max_limit > :sum " +
+            "WHERE p.type = :type AND p.max_limit >= :sum AND p.period_months >= :minPeriod " +
             "ORDER BY p.max_limit LIMIT 1", nativeQuery = true)
-    Optional<Product> getProductByTypeAndSum(@Param("type") String type, @Param("sum") Double sum);
+    Optional<Product> getProductByTypeSumAndPeriod(@Param("type") String type, @Param("sum") Double sum,
+                                                   @Param("minPeriod") Integer minPeriod);
 
     @Query("select p from Product p where p.status = 'ACTIVE'")
     List<Product> findAllActiveProducts();
