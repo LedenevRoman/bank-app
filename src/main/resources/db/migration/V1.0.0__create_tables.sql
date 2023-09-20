@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS products
     type          varchar(20),
     status        varchar(20),
     interest_rate decimal(6, 4),
-    max_limit     int,
+    min_limit     int,
     period_months int,
     created_at    TIMESTAMP,
     updated_at    TIMESTAMP
@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS accounts
 (
     id            INT PRIMARY KEY AUTO_INCREMENT,
     client_id     int,
-    name          varchar(100),
+    number        varchar(28) UNIQUE,
     type          varchar(20),
     status        varchar(20),
     balance       decimal(15, 2),

@@ -24,7 +24,7 @@ public interface AccountMapper {
         return value.toUpperCase();
     }
     @Named("doubleToBigDecimal")
-    default BigDecimal doubleToBigDecimal(Double balance) {
-        return BigDecimal.valueOf(balance);
+    default BigDecimal doubleToBigDecimal(Double value) {
+        return BigDecimal.valueOf(value);
     }
 }

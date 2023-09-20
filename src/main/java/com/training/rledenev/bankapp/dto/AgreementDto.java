@@ -1,14 +1,14 @@
 package com.training.rledenev.bankapp.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
 public class AgreementDto {
+    private Long id;
     private Double sum;
     private String productType;
     private String currencyCode;
     private Integer periodMonths;
-    private Long productId;
+    private String productName;
+    private Double interestRate;
 }

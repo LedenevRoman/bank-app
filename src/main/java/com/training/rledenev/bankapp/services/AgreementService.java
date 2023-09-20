@@ -1,8 +1,15 @@
 package com.training.rledenev.bankapp.services;
 
 import com.training.rledenev.bankapp.dto.AgreementDto;
-import com.training.rledenev.bankapp.entity.Agreement;
+
+import java.util.List;
 
 public interface AgreementService {
-    Agreement createNewAgreement(AgreementDto agreementDto);
+    AgreementDto createNewAgreement(AgreementDto agreementDto);
+
+    List<AgreementDto> getAgreementsForManager();
+
+    void confirmAgreementByManager(AgreementDto agreementDto);
+
+    void blockAgreementByManager(AgreementDto agreementDto);
 }

@@ -6,8 +6,8 @@ import lombok.Getter;
 public enum ProductType {
     LOAN("Loan"),
     DEPOSIT("Deposit"),
-    DEBIT_ACCOUNT("Debit account"),
-    CREDIT_CARD("Credit account");
+    DEBIT_CARD("Debit card"),
+    CREDIT_CARD("Credit card");
 
     private final String name;
 

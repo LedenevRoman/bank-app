@@ -1,6 +1,7 @@
 package com.training.rledenev.bankapp.services.bot.impl;
 
 import com.training.rledenev.bankapp.entity.enums.CurrencyCode;
+import com.training.rledenev.bankapp.entity.enums.Role;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
@@ -19,6 +20,7 @@ public final class BotUtils {
     public static final String CONFIRM = "Confirm";
     public static final String REGISTER_USER = "Register";
     public static final String LOG_IN = "Log in";
+    public static final String BLOCK = "Block";
     public static final String UNKNOWN_INPUT_MESSAGE = "Sorry, I don't know how to handle such command yet :(";
     public static final String ENTER_FIRST_NAME = "Please enter your first name:";
     public static final String ENTER_LAST_NAME = "Please enter your last name:";
@@ -44,14 +46,28 @@ public final class BotUtils {
     public static final String SESSION_CLOSED = "Session was expired, please log in";
     public static final String PRODUCTS = "Products";
     public static final String CURRENCY_RATES = "Currency rates";
+    public static final String ACCESS_DENIED = "Access denied";
+    public static final String NEW_AGREEMENTS = "New agreements";
+    public static final String NEW_AGREEMENTS_LIST = "Here is a list of new agreements:" + "\n";
+    public static final String AGREEMENT_INFO = "- ID: %d, product name: %s, sum: %.2f %s, period: %d months.";
+    public static final String SELECTED_AGREEMENT_INFO = "You have chosen the following agreement:" + "\n"
+            + AGREEMENT_INFO + "\n" + "\n"
+            + SELECT_ACTION;
+    public static final String SELECT_AGREEMENT_ID = "Please, select agreement id to approve:";
+    public static final String WRONG_AGREEMENT_ID = "Wrong agreement id number." + "\n"
+            + SELECT_AGREEMENT_ID;
+    public static final String AGREEMENT_CONFIRMED = "Agreement with id %d was confirmed." + "\n" + "\n";
+
+    public static final String AGREEMENT_BLOCKED = "Agreement with id %d was blocked." + "\n"
+            + SELECT_AGREEMENT_ID;
     public static final String PRODUCTS_LIST_MESSAGE = "Here is a list of available types of products:" + "\n";
     public static final String PRODUCTS_LIST_OF_TYPE = "Here is a list of products of type %s:" + "\n";
-    public static final String PRODUCT_INFO = ". %s, from zł.%,d with an interest rate of %.2f%%, " +
-            "for a period of %d months.";
+    public static final String PRODUCT_INFO = ". %s, from zł.%,d with an interest rate of %.2f%%, "
+            + "for a period of %d months.";
     public static final String SELECT_PRODUCT = "Select your desired product:";
     public static final String SELECT_CURRENCY = "Select currency:";
-    public static final String NOTE_ABOUT_CONVERT = "Note that the amount will be converted into PLN to compare" +
-            " with the limit for your product.";
+    public static final String NOTE_ABOUT_CONVERT = "Note that the amount will be converted into PLN to compare"
+            + " with the limit for your product.";
     public static final String ENTER_AMOUNT = "Please enter the desired amount of money in your currency:";
     public static final String INCORRECT_NUMBER = "Number must contain only numbers and one dot." + "\n"
             + "Please enter correct number:";
@@ -62,7 +78,7 @@ public final class BotUtils {
             + " with an interest rate of %.2f%%";
     public static final String AGREEMENT_DONE = "Done. You took the following product: " + "\n"
             + "%s" + "\n"
-            + "on %s %s" + "\n"
+            + "on %,d %s with interest rate %.2f%%" + "\n"
             + "for a period of %d months." + "\n" + "\n"
             + "Please wait until the manager approves your application." + "\n" + "\n"
             + SELECT_ACTION;
@@ -86,7 +102,8 @@ public final class BotUtils {
         return sendMessage;
     }
 
-    public static SendMessage addButtonsToMessage(SendMessage sendMessage, List<String> buttons) {
+    public static SendMessage createSendMessageWithButtons(Long chatId, String textToSend, List<String> buttons) {
+        SendMessage sendMessage = createSendMessage(chatId, textToSend);
         ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();
         keyboardMarkup.setResizeKeyboard(true);
         keyboardMarkup.setOneTimeKeyboard(true);
@@ -97,8 +114,15 @@ public final class BotUtils {
         return sendMessage;
     }
 
-    public static List<String> getListOfActions() {
-        return List.of(PRODUCTS, CURRENCY_RATES, EXIT);
+    public static List<String> getListOfActionsByUserRole(Role role) {
+        List<String> actions = new ArrayList<>();
+        if (role == Role.MANAGER) {
+            actions.add(NEW_AGREEMENTS);
+        }
+        actions.add(PRODUCTS);
+        actions.add(CURRENCY_RATES);
+        actions.add(EXIT);
+        return actions;
     }
 
     private static List<KeyboardRow> getKeyboardRows(List<String> buttons) {
@@ -131,5 +155,9 @@ public final class BotUtils {
         return Arrays.stream(CurrencyCode.values())
                 .map(Enum::toString)
                 .collect(Collectors.toList());
+    }
+
+    public static List<String> getApproveDeclineButtons() {
+        return List.of(CONFIRM, BLOCK, BACK);
     }
 }

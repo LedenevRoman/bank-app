@@ -11,7 +11,7 @@ VALUES
     ('CLIENT', 'ACTIVE', '$2a$04$pqlgizIi1uE4Tb9BxRT3D.qonNfBIXxCDiq.r2tL5vqQKNGQ25IE6', 'Harper', 'Young', 'harper.young@yopmail.com ', '321 Oak St', '714-2938', '2023-08-03 13:57:40', '2023-09-01 13:57:40'),
     ('MANAGER', 'ACTIVE', '$2a$04$pqlgizIi1uE4Tb9BxRT3D.qonNfBIXxCDiq.r2tL5vqQKNGQ25IE6', 'Andrew', 'Allen', 'andrew.allen@yopmail.com ', '456 Maple St', '408-5726', '2023-08-10 13:57:40', '2023-08-10 13:57:40');
 
-INSERT INTO products (name, type, status, interest_rate, max_limit, period_months, created_at, updated_at)
+INSERT INTO products (name, type, status, interest_rate, min_limit, period_months, created_at, updated_at)
 VALUES
     ('Auto Loan' ,'LOAN','ACTIVE', 4.5, 60000, 60, '2023-09-03 13:00:00', '2023-09-03 13:00:00'),
     ('Mortgage Loan' ,'LOAN','ACTIVE', 3.2, 250000, 240, '2023-09-03 13:00:00', '2023-09-03 13:00:00'),
@@ -27,21 +27,23 @@ VALUES
     ('Pension Savings Deposit', 'DEPOSIT', 'ACTIVE', 3.8, 30000, 120, '2023-09-03 13:00:00', '2023-09-03 13:00:00'),
     ('Children''s Savings Deposit', 'DEPOSIT', 'ACTIVE', 4.5, 5000, 60, '2023-09-03 13:00:00', '2023-09-03 13:00:00'),
     ('Monthly Interest Payment Deposit', 'DEPOSIT', 'ACTIVE', 3.0, 25000, 36, '2023-09-03 13:00:00', '2023-09-03 13:00:00'),
-    ('VIP Deposit', 'DEPOSIT', 'ACTIVE', 4.8, 100000, 24, '2023-09-03 13:00:00', '2023-09-03 13:00:00');
+    ('VIP Deposit', 'DEPOSIT', 'ACTIVE', 4.8, 100000, 24, '2023-09-03 13:00:00', '2023-09-03 13:00:00'),
+    ('Credit card', 'CREDIT_CARD', 'ACTIVE', 18, 10000, 1, '2023-09-03 13:00:00', '2023-09-03 13:00:00'),
+    ('VIP Deposit', 'DEBIT_CARD', 'ACTIVE', 0, 0, 0, '2023-09-03 13:00:00', '2023-09-03 13:00:00');
 
-INSERT INTO accounts (client_id, name, type, status, balance, currency_code, created_at, updated_at)
+INSERT INTO accounts (client_id, number, type, status, balance, currency_code, created_at, updated_at)
 VALUES
-    (1, 'IsabellaWDebit', 'DEBIT', 'ACTIVE', 10321.41, 'USD', '2023-09-04 13:57:40', '2023-09-04 13:57:40'),
-    (1, 'IsabellaWCredit', 'CREDIT', 'ACTIVE', 5031.75, 'USD', '2023-09-04 13:57:40', '2023-09-04 13:57:40'),
-    (2, 'JamesHCredit', 'CREDIT', 'ACTIVE', 8121.42, 'EUR', '2023-09-03 13:57:40', '2023-09-03 13:57:40'),
-    (3, 'MiaCCredit', 'CREDIT', 'ACTIVE', 3002.11, 'USD', '2023-09-03 13:57:40', '2023-09-03 13:57:40'),
-    (4, 'JosephLCredit', 'CREDIT', 'ACTIVE', 2453.24, 'EUR', '2023-09-03 13:57:40', '2023-09-03 13:57:40'),
-    (5, 'CharlotteLCredit', 'CREDIT', 'ACTIVE', 7610.31, 'USD', '2023-09-03 13:57:40', '2023-09-03 13:57:40'),
-    (6, 'DavidWCredit', 'CREDIT', 'ACTIVE', 9543.17, 'EUR', '2023-09-04 13:57:40', '2023-09-04 13:57:40'),
-    (7, 'AbigailHCredit', 'CREDIT', 'ACTIVE', 4214.86, 'EUR', '2023-09-04 13:57:40', '2023-09-04 13:57:40'),
-    (8, 'ChristopherWCredit', 'CREDIT', 'ACTIVE', 6520.96, 'USD', '2023-09-04 13:57:40', '2023-09-04 13:57:40'),
-    (9, 'HarperYCredit', 'CREDIT', 'ACTIVE', 7120.88, 'EUR', '2023-09-03 13:57:40', '2023-09-03 13:57:40'),
-    (10, 'AndrewACredit', 'CREDIT', 'ACTIVE', 3512.73, 'USD', '2023-09-03 13:57:40', '2023-09-03 13:57:40');
+    (1, '12345678910123456', 'DEBIT', 'ACTIVE', 10321.41, 'USD', '2023-09-04 13:57:40', '2023-09-04 13:57:40'),
+    (1, '61234567891012345', 'CREDIT', 'ACTIVE', 5031.75, 'USD', '2023-09-04 13:57:40', '2023-09-04 13:57:40'),
+    (2, '56123456789101234', 'CREDIT', 'ACTIVE', 8121.42, 'EUR', '2023-09-03 13:57:40', '2023-09-03 13:57:40'),
+    (3, '45612345678910123', 'CREDIT', 'ACTIVE', 3002.11, 'USD', '2023-09-03 13:57:40', '2023-09-03 13:57:40'),
+    (4, '34561234567891012', 'CREDIT', 'ACTIVE', 2453.24, 'EUR', '2023-09-03 13:57:40', '2023-09-03 13:57:40'),
+    (5, '23456123456789101', 'CREDIT', 'ACTIVE', 7610.31, 'USD', '2023-09-03 13:57:40', '2023-09-03 13:57:40'),
+    (6, '12345612345678910', 'CREDIT', 'ACTIVE', 9543.17, 'EUR', '2023-09-04 13:57:40', '2023-09-04 13:57:40'),
+    (7, '01234561234567891', 'CREDIT', 'ACTIVE', 4214.86, 'EUR', '2023-09-04 13:57:40', '2023-09-04 13:57:40'),
+    (8, '10123456123456789', 'CREDIT', 'ACTIVE', 6520.96, 'USD', '2023-09-04 13:57:40', '2023-09-04 13:57:40'),
+    (9, '91012345612345678', 'CREDIT', 'ACTIVE', 7120.88, 'EUR', '2023-09-03 13:57:40', '2023-09-03 13:57:40'),
+    (10, '89101234561234567', 'CREDIT', 'ACTIVE', 3512.73, 'USD', '2023-09-03 13:57:40', '2023-09-03 13:57:40');
 
 INSERT INTO agreements (account_id, product_id, manager_id, status, sum, period_months, created_at, updated_at)
 VALUES

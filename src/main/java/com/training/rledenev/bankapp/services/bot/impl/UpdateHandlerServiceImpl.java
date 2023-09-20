@@ -8,17 +8,17 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static com.training.rledenev.bankapp.services.bot.impl.BotUtils.*;
 
 @Service
 public class UpdateHandlerServiceImpl implements UpdateHandlerService {
-    static final Map<Long, String> CHAT_ID_TOKEN_MAP = new HashMap<>();
-    static final Map<Long, Boolean> CHAT_ID_IS_IN_REGISTRATION_MAP = new HashMap<>();
-    static final Map<Long, Boolean> CHAT_ID_IS_IN_LOGIN_MAP = new HashMap<>();
+    static final Map<Long, String> CHAT_ID_TOKEN_MAP = new ConcurrentHashMap<>();
+    static final Map<Long, Boolean> CHAT_ID_IS_IN_REGISTRATION_MAP = new ConcurrentHashMap<>();
+    static final Map<Long, Boolean> CHAT_ID_IS_IN_LOGIN_MAP = new ConcurrentHashMap<>();
     private final RegistrationUserService registrationUserService;
     private final LogInUserService logInUserService;
     private final AuthorizedUserService authorizedUserService;
@@ -50,7 +50,7 @@ public class UpdateHandlerServiceImpl implements UpdateHandlerService {
                 return handleNotAuthorizedRequests(messageText, chatId);
             }
         }
-        return createSendMessage(chatId, UNKNOWN_INPUT_MESSAGE);
+        return createSendMessageWithButtons(chatId, UNKNOWN_INPUT_MESSAGE, List.of(EXIT));
     }
 
     private SendMessage handleNotAuthorizedRequests(String messageText, long chatId) {
@@ -65,12 +65,11 @@ public class UpdateHandlerServiceImpl implements UpdateHandlerService {
             CHAT_ID_IS_IN_LOGIN_MAP.put(chatId, true);
             return createSendMessage(chatId, ENTER_EMAIL);
         }
-        return createSendMessage(chatId, UNKNOWN_INPUT_MESSAGE);
+        return createSendMessageWithButtons(chatId, UNKNOWN_INPUT_MESSAGE, List.of(EXIT));
     }
 
     private SendMessage startCommandReceived(Long chatId) {
-        SendMessage sendMessage = createSendMessage(chatId, WELCOME_MESSAGE);
-        return BotUtils.addButtonsToMessage(sendMessage, List.of(REGISTER_USER, LOG_IN));
+        return BotUtils.createSendMessageWithButtons(chatId, WELCOME_MESSAGE, List.of(REGISTER_USER, LOG_IN));
     }
 
     private static boolean checkMessageExists(Update update) {

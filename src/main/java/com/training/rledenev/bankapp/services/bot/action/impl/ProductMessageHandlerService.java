@@ -1,8 +1,8 @@
 package com.training.rledenev.bankapp.services.bot.action.impl;
 
 import com.training.rledenev.bankapp.dto.AgreementDto;
-import com.training.rledenev.bankapp.entity.Agreement;
-import com.training.rledenev.bankapp.entity.Product;
+import com.training.rledenev.bankapp.dto.ProductDto;
+import com.training.rledenev.bankapp.entity.enums.Role;
 import com.training.rledenev.bankapp.exceptions.ProductNotFoundException;
 import com.training.rledenev.bankapp.services.AgreementService;
 import com.training.rledenev.bankapp.services.ProductService;
@@ -12,16 +12,16 @@ import com.training.rledenev.bankapp.services.bot.impl.BotUtils;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import static com.training.rledenev.bankapp.services.bot.impl.BotUtils.*;
 
 @Service
 public class ProductMessageHandlerService implements ActionMessageHandlerService {
-    public static final Map<Long, AgreementDto> CHAT_ID_AGREEMENT_DTO_MAP = new HashMap<>();
+    public static final Map<Long, AgreementDto> CHAT_ID_AGREEMENT_DTO_MAP = new ConcurrentHashMap<>();
     private final AgreementService agreementService;
     private final ProductService productService;
 
@@ -31,11 +31,10 @@ public class ProductMessageHandlerService implements ActionMessageHandlerService
     }
 
     @Override
-    public SendMessage handleMessage(long chatId, String message) {
+    public SendMessage handleMessage(long chatId, String message, Role role) {
         if (CHAT_ID_AGREEMENT_DTO_MAP.get(chatId) == null) {
-            List<Product> products = productService.getAllActiveProducts();
-            List<String> productTypes = products.stream()
-                    .map(product -> product.getType().toString())
+            List<String> productTypes = productService.getAllActiveProductDtos().stream()
+                    .map(ProductDto::getType)
                     .distinct()
                     .collect(Collectors.toList());
             if (message.equals(PRODUCTS)) {
@@ -43,19 +42,17 @@ public class ProductMessageHandlerService implements ActionMessageHandlerService
                 productTypes.forEach(productType -> stringBuilder.append(productType).append("\n"));
                 stringBuilder.append("\n").append(SELECT_PRODUCT);
                 productTypes.add(BACK);
-                SendMessage sendMessage = createSendMessage(chatId, stringBuilder.toString());
-                return addButtonsToMessage(sendMessage, productTypes);
+                return createSendMessageWithButtons(chatId, stringBuilder.toString(), productTypes);
             }
             if (productTypes.contains(message)) {
                 AgreementDto agreementDto = new AgreementDto();
                 agreementDto.setProductType(message);
                 CHAT_ID_AGREEMENT_DTO_MAP.put(chatId, agreementDto);
-                List<Product> allProductsWithType = productService.getActiveProductsWithType(message);
-                String response = getAllProductsWithTypeListMessage(message, allProductsWithType);
-                SendMessage sendMessage = createSendMessage(chatId, response);
-                return addButtonsToMessage(sendMessage, getCurrencyButtons());
+                return createSendMessageWithButtons(chatId,
+                        getAllProductsWithTypeListMessage(message, productService.getActiveProductsWithType(message)),
+                        getCurrencyButtons());
             }
-            return createSendMessage(chatId, UNKNOWN_INPUT_MESSAGE);
+            return createSendMessageWithButtons(chatId, UNKNOWN_INPUT_MESSAGE, List.of(EXIT));
         } else {
             AgreementDto agreementDto = CHAT_ID_AGREEMENT_DTO_MAP.get(chatId);
             if (agreementDto.getCurrencyCode() == null) {
@@ -73,41 +70,41 @@ public class ProductMessageHandlerService implements ActionMessageHandlerService
             if (agreementDto.getPeriodMonths() == null) {
                 try {
                     agreementDto.setPeriodMonths(Integer.parseInt(message));
-                    Product product = productService.getSuitableProduct(agreementDto);
-                    agreementDto.setProductId(product.getId());
-                    SendMessage sendMessage = createSendMessage(chatId, String.format(SUITABLE_PRODUCT,
-                            product.getName(), product.getInterestRate().doubleValue()));
-                    return addButtonsToMessage(sendMessage, List.of(CONFIRM, BACK));
+                    ProductDto productDto = productService.getSuitableProduct(agreementDto);
+                    agreementDto.setProductName(productDto.getName());
+                    return createSendMessageWithButtons(chatId, String.format(SUITABLE_PRODUCT,
+                            productDto.getName(), productDto.getInterestRate()), List.of(CONFIRM, BACK));
                 } catch (NumberFormatException e) {
                     return createSendMessage(chatId, INCORRECT_NUMBER_INT);
                 } catch (ProductNotFoundException e) {
                     CHAT_ID_AGREEMENT_DTO_MAP.remove(chatId);
-                    SendMessage sendMessage = createSendMessage(chatId, e.getMessage() + "\n" + SELECT_ACTION);
-                    return BotUtils.addButtonsToMessage(sendMessage, getListOfActions());
+                    AuthorizedUserServiceImpl.CHAT_ID_ACTION_NAME_MAP.remove(chatId);
+                    return BotUtils.createSendMessageWithButtons(chatId, e.getMessage() + "\n" + SELECT_ACTION,
+                            getListOfActionsByUserRole(role));
                 }
             } else {
-                Agreement agreement = agreementService.createNewAgreement(agreementDto);
+                agreementDto = agreementService.createNewAgreement(agreementDto);
                 CHAT_ID_AGREEMENT_DTO_MAP.remove(chatId);
                 AuthorizedUserServiceImpl.CHAT_ID_ACTION_NAME_MAP.remove(chatId);
-                String response = getNewAgreementMessage(agreement);
-                SendMessage sendMessage = createSendMessage(chatId, response);
-                return BotUtils.addButtonsToMessage(sendMessage, getListOfActions());
+                return BotUtils.createSendMessageWithButtons(chatId, getNewAgreementMessage(agreementDto),
+                        getListOfActionsByUserRole(role));
             }
         }
     }
 
-    private String getNewAgreementMessage(Agreement agreement) {
-        return String.format(AGREEMENT_DONE, agreement.getProduct().getType().toString(), agreement.getSum().toString(),
-                agreement.getAccount().getCurrencyCode(), agreement.getPeriodMonths());
+    private String getNewAgreementMessage(AgreementDto agreementDto) {
+        return String.format(AGREEMENT_DONE, agreementDto.getProductName(), Math.round(agreementDto.getSum()),
+                agreementDto.getCurrencyCode(), agreementDto.getInterestRate(), agreementDto.getPeriodMonths());
     }
 
-    private static String getAllProductsWithTypeListMessage(String message, List<Product> allProductsWithType) {
-        StringBuilder stringBuilder = new StringBuilder(String.format(PRODUCTS_LIST_OF_TYPE, message));
+    private static String getAllProductsWithTypeListMessage(String productType, List<ProductDto> allProductsWithType) {
+        StringBuilder stringBuilder = new StringBuilder(String.format(PRODUCTS_LIST_OF_TYPE, productType));
         for (int i = 0; i < allProductsWithType.size(); i++) {
-            Product product = allProductsWithType.get(i);
+            ProductDto productDto = allProductsWithType.get(i);
             stringBuilder.append(i + 1)
-                    .append(String.format(PRODUCT_INFO, product.getName(), product.getMaxLimit(),
-                            product.getInterestRate().doubleValue(), product.getPeriodMonths()))
+                    .append(String.format(PRODUCT_INFO, productDto.getName(), productDto.getMinLimit(),
+                            productDto.getInterestRate(), productDto.getPeriodMonths()))
+                    .append("\n")
                     .append("\n");
         }
         stringBuilder.append("\n")

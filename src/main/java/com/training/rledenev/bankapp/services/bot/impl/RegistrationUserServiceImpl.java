@@ -7,9 +7,9 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static com.training.rledenev.bankapp.services.bot.impl.BotUtils.*;
 
@@ -22,7 +22,7 @@ public class RegistrationUserServiceImpl implements RegistrationUserService {
             "(?!.*\\.{2})[A-Za-z0-9][A-Za-z0-9.]{4,28}[A-Za-z0-9]@[A-Za-z0-9.]+\\.[A-Za-z]{2,}";
     private static final String PASSWORD_PATTERN =
             "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\\p{Punct})[a-zA-Z\\d\\p{Punct}]*$";
-    private static final Map<Long, UserDto> CHAT_ID_USER_DTO_MAP = new HashMap<>();
+    private static final Map<Long, UserDto> CHAT_ID_USER_DTO_MAP = new ConcurrentHashMap<>();
 
     private final UserService userService;
 
@@ -104,8 +104,7 @@ public class RegistrationUserServiceImpl implements RegistrationUserService {
             userService.saveNewClient(userDto);
             CHAT_ID_USER_DTO_MAP.remove(chatId, userDto);
             UpdateHandlerServiceImpl.CHAT_ID_IS_IN_REGISTRATION_MAP.put(chatId, false);
-            SendMessage sendMessage = createSendMessage(chatId, REGISTRATION_COMPLETED);
-            return addButtonsToMessage(sendMessage, List.of(REGISTER_USER, LOG_IN));
+            return createSendMessageWithButtons(chatId, REGISTRATION_COMPLETED, List.of(REGISTER_USER, LOG_IN));
         } else {
             return createSendMessage(chatId, INCORRECT_PASSWORD);
         }

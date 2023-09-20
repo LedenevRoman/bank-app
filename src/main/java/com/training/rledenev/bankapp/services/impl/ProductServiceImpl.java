@@ -1,11 +1,12 @@
 package com.training.rledenev.bankapp.services.impl;
 
 import com.training.rledenev.bankapp.dto.AgreementDto;
-import com.training.rledenev.bankapp.entity.Product;
+import com.training.rledenev.bankapp.dto.ProductDto;
 import com.training.rledenev.bankapp.entity.enums.CurrencyCode;
 import com.training.rledenev.bankapp.entity.enums.ProductType;
 import com.training.rledenev.bankapp.exceptions.ProductNotFoundException;
 import com.training.rledenev.bankapp.exceptions.RequestApiException;
+import com.training.rledenev.bankapp.mapper.ProductMapper;
 import com.training.rledenev.bankapp.repository.ProductRepository;
 import com.training.rledenev.bankapp.services.ProductService;
 import org.json.JSONObject;
@@ -25,34 +26,41 @@ import static com.training.rledenev.bankapp.services.impl.ServiceUtils.getEnumNa
 @Service
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
+    private final ProductMapper productMapper;
 
-    public ProductServiceImpl(ProductRepository productRepository) {
+    public ProductServiceImpl(ProductRepository productRepository, ProductMapper productMapper) {
         this.productRepository = productRepository;
+        this.productMapper = productMapper;
     }
 
     @Transactional
     @Override
-    public List<Product> getAllActiveProducts() {
-        return productRepository.findAllActiveProducts();
+    public List<ProductDto> getAllActiveProductDtos() {
+        return productMapper.mapToListDto(productRepository.findAllActiveProducts());
     }
 
     @Transactional
     @Override
-    public List<Product> getActiveProductsWithType(String productType) {
-        return productRepository.findAllActiveProductsWithType(ProductType.valueOf(getEnumName(productType)));
+    public List<ProductDto> getActiveProductsWithType(String productType) {
+        return productMapper.mapToListDto(productRepository
+                .findAllActiveProductsWithType(ProductType.valueOf(getEnumName(productType))));
     }
 
     @Transactional
     @Override
-    public Product getSuitableProduct(AgreementDto agreementDto) {
+    public ProductDto getSuitableProduct(AgreementDto agreementDto) {
         BigDecimal convertedAmount = BigDecimal.valueOf(agreementDto.getSum());
         if (!agreementDto.getCurrencyCode().equals(CurrencyCode.PLN.toString())) {
             BigDecimal rate = getRateOfCurrency(agreementDto.getCurrencyCode());
             convertedAmount = convertedAmount.multiply(rate);
         }
-        return productRepository.getProductByTypeSumAndPeriod(getEnumName(agreementDto.getProductType()),
-                convertedAmount.doubleValue(), agreementDto.getPeriodMonths())
-                .orElseThrow(() -> new ProductNotFoundException("Amount or period is out of limit"));
+        return productMapper.mapToDto(
+                productRepository.getProductByTypeSumAndPeriod(
+                        getEnumName(agreementDto.getProductType()),
+                        convertedAmount.doubleValue(),
+                        agreementDto.getPeriodMonths()
+                        ).orElseThrow(() -> new ProductNotFoundException("Amount or period is out of limit"))
+        );
     }
 
     @Override

@@ -28,4 +28,10 @@ public class AccountServiceImpl implements AccountService {
         accountRepository.save(account);
         return account;
     }
+
+    @Transactional
+    @Override
+    public boolean checkAccountNumberExists(String number) {
+        return accountRepository.checkAccountNumberExists(number);
+    }
 }

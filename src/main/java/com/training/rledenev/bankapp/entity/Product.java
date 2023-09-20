@@ -36,8 +36,8 @@ public class Product {
     @Column(name = "interest_rate")
     private BigDecimal interestRate;
 
-    @Column(name = "max_limit")
-    private Integer maxLimit;
+    @Column(name = "min_limit")
+    private Integer minLimit;
 
     @Column(name = "period_months")
     private Integer periodMonths;

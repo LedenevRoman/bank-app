@@ -27,8 +27,8 @@ public class Account {
     @JoinColumn(name = "client_id", referencedColumnName = "id")
     private User client;
 
-    @Column(name = "name")
-    private String name;
+    @Column(name = "number")
+    private String number;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "type")
