@@ -4,6 +4,10 @@ import com.training.rledenev.bankapp.services.bot.AuthorizedUserService;
 import com.training.rledenev.bankapp.services.bot.LogInUserService;
 import com.training.rledenev.bankapp.services.bot.RegistrationUserService;
 import com.training.rledenev.bankapp.services.bot.UpdateHandlerService;
+import com.training.rledenev.bankapp.services.bot.action.impl.AccountsMessageHandlerService;
+import com.training.rledenev.bankapp.services.bot.action.impl.AgreementMessageHandlerService;
+import com.training.rledenev.bankapp.services.bot.action.impl.ProductMessageHandlerService;
+import com.training.rledenev.bankapp.services.bot.action.impl.transaction.impl.TransactionMessageHandlerServiceImpl;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -37,6 +41,11 @@ public class UpdateHandlerServiceImpl implements UpdateHandlerService {
             String messageText = update.getMessage().getText();
             if (messageText.equals(EXIT)) {
                 CHAT_ID_TOKEN_MAP.remove(chatId);
+                AuthorizedUserServiceImpl.CHAT_ID_ACTION_NAME_MAP.remove(chatId);
+                ProductMessageHandlerService.CHAT_ID_AGREEMENT_DTO_MAP.remove(chatId);
+                AgreementMessageHandlerService.CHAT_ID_AGREEMENT_DTO_MAP.remove(chatId);
+                AccountsMessageHandlerService.CHAT_ID_ACCOUNT_DTO_MAP.remove(chatId);
+                TransactionMessageHandlerServiceImpl.CHAT_ID_TRANSACTION_DTO_MAP.remove(chatId);
             }
             if (Boolean.TRUE.equals(CHAT_ID_IS_IN_REGISTRATION_MAP.get(chatId))) {
                 return registrationUserService.handleRegistrationRequests(chatId, messageText, update);

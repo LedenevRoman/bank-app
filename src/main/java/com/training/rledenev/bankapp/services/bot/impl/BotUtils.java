@@ -2,6 +2,7 @@ package com.training.rledenev.bankapp.services.bot.impl;
 
 import com.training.rledenev.bankapp.entity.enums.CurrencyCode;
 import com.training.rledenev.bankapp.entity.enums.Role;
+import com.training.rledenev.bankapp.entity.enums.TransactionType;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
@@ -18,9 +19,14 @@ public final class BotUtils {
     public static final String EXIT = "Exit";
     public static final String BACK = "Back";
     public static final String CONFIRM = "Confirm";
+    public static final String CANCEL = "Cancel";
     public static final String REGISTER_USER = "Register";
     public static final String LOG_IN = "Log in";
     public static final String BLOCK = "Block";
+    public static final String TRANSACTION_COMPLETED = "Transaction completed successfully";
+    public static final String TRANSACTION_CANCELED = "Transaction was canceled";
+    public static final String SOMETHING_WRONG = "Something went wrong, check the input data.";
+    public static final String INSUFFICIENT_FUNDS = "Insufficient funds.";
     public static final String UNKNOWN_INPUT_MESSAGE = "Sorry, I don't know how to handle such command yet :(";
     public static final String ENTER_FIRST_NAME = "Please enter your first name:";
     public static final String ENTER_LAST_NAME = "Please enter your last name:";
@@ -48,6 +54,39 @@ public final class BotUtils {
     public static final String CURRENCY_RATES = "Currency rates";
     public static final String ACCESS_DENIED = "Access denied";
     public static final String NEW_AGREEMENTS = "New agreements";
+    public static final String MY_ACCOUNTS = "My accounts";
+    public static final String MY_ACCOUNTS_LIST = "Here is a list of your accounts:" + "\n";
+    public static final String SHORT_ACCOUNT_INFO = "%d) Number: %s, product name: %s, balance: %.2f %s.";
+    public static final String FULL_ACCOUNT_INFO = "Account number %s info:" + "\n"
+            + "Owner: %s" + "\n"
+            + "Product name: %s" + "\n"
+            + "Interest rate: %.2f" + "\n"
+            + "Start date by agreement: %td-%tm-%tY" + "\n"
+            + "Payment term by agreement: %td-%tm-%tY" + "\n"
+            + "Balance: %.2f" + "\n"
+            + "Currency: %s" + "\n" + "\n"
+            + SELECT_ACTION;
+    public static final String TRANSACTION_INFO = "Your transaction:" + "\n"
+            + "To account: %s" + "\n"
+            + "Amount: %.2f" + "\n"
+            + "Currency code: %s" + "\n"
+            + "Type: %s" + "\n"
+            + "Description: %s";
+    public static final String SELECT_ACCOUNT = "Please, select account:";
+    public static final String MAKE_TRANSACTION = "Make transaction";
+    public static final String ENTER_ACCOUNT_NUMBER = "Enter the account number to which the transfer should be made:";
+    public static final String SELECT_TYPE = "Select type:";
+    public static final String ENTER_DESCRIPTION = "Enter description:";
+    public static final String LIST_DEBIT_TRANSACTION = "Here is a list of your debit transactions:" + "\n";
+    public static final String LIST_CREDIT_TRANSACTION = "Here is a list of your credit transactions:" + "\n";
+    public static final String AMOUNT_DEBIT_TRANSACTION_INFO = "- %.2f %s (%.2f %s), on account: %s." + "\n";
+    public static final String AMOUNT_IN_SAME_CURRENCY_DEBIT_TRANSACTION_INFO = "- %.2f %s, on account: %s." + "\n";
+    public static final String AMOUNT_CREDIT_TRANSACTION_INFO = "+ %.2f %s (%.2f %s), from account: %s." + "\n";
+    public static final String AMOUNT_IN_SAME_CURRENCY_CREDIT_TRANSACTION_INFO = "+ %.2f %s, from account: %s." + "\n";
+    public static final String ANOTHER_TRANSACTION_INFO = "Date: %tc," + "\n"
+            + "with type: %s, and description: %s." + "\n" + "\n";
+    public static final String VIEW_ALL_TRANSACTIONS = "View all transactions";
+    public static final String BACK_TO_LIST_ACCOUNTS = "Back to list of accounts";
     public static final String NEW_AGREEMENTS_LIST = "Here is a list of new agreements:" + "\n";
     public static final String AGREEMENT_INFO = "- ID: %d, product name: %s, sum: %.2f %s, period: %d months.";
     public static final String SELECTED_AGREEMENT_INFO = "You have chosen the following agreement:" + "\n"
@@ -73,6 +112,8 @@ public final class BotUtils {
             + "Please enter correct number:";
     public static final String INCORRECT_NUMBER_INT = "Number must contain only numbers." + "\n"
             + "Please enter correct number:";
+    public static final String WRONG_ACCOUNT_INDEX = "Wrong account index." + "\n"
+            + "Please enter the index listed on the buttons below:";
     public static final String ENTER_MINIMAL_PERIOD = "Please enter the minimum validity period in months:";
     public static final String SUITABLE_PRODUCT = "The product that suits your needs is a %s." + "\n"
             + " with an interest rate of %.2f%%";
@@ -119,6 +160,7 @@ public final class BotUtils {
         if (role == Role.MANAGER) {
             actions.add(NEW_AGREEMENTS);
         }
+        actions.add(MY_ACCOUNTS);
         actions.add(PRODUCTS);
         actions.add(CURRENCY_RATES);
         actions.add(EXIT);
@@ -159,5 +201,15 @@ public final class BotUtils {
 
     public static List<String> getApproveDeclineButtons() {
         return List.of(CONFIRM, BLOCK, BACK);
+    }
+
+    public static List<String> getListOfActionsForClientAccount() {
+        return List.of(MAKE_TRANSACTION, VIEW_ALL_TRANSACTIONS, BACK_TO_LIST_ACCOUNTS);
+    }
+
+    public static List<String> getTypeButtons() {
+        TransactionType[] types = TransactionType.values();
+        return Arrays.stream(types).map(TransactionType::getName)
+                .collect(Collectors.toList());
     }
 }

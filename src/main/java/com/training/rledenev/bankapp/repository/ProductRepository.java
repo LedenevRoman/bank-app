@@ -15,8 +15,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query(value =
             "SELECT * FROM products p " +
-            "WHERE p.type = :type AND p.min_limit <= :sum AND p.period_months >= :minPeriod " +
-            "ORDER BY p.min_limit DESC LIMIT 1", nativeQuery = true)
+                    "WHERE p.status = 'ACTIVE' AND p.type = :type AND p.min_limit <= :sum AND p.period_months >= :minPeriod " +
+                    "ORDER BY p.min_limit DESC LIMIT 1", nativeQuery = true)
     Optional<Product> getProductByTypeSumAndPeriod(@Param("type") String type, @Param("sum") Double sum,
                                                    @Param("minPeriod") Integer minPeriod);
 
@@ -28,4 +28,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("select p from Product p where p.status = 'ACTIVE' and p.name = :productName")
     Optional<Product> findActiveProductByName(@Param("productName") String productName);
+
+    @Query(value =
+            "SELECT * FROM products p " +
+                    "WHERE p.status = 'ACTIVE' AND p.type = :type " +
+                    "ORDER BY p.min_limit DESC LIMIT 1", nativeQuery = true)
+    Optional<Product> getCardProduct(@Param("type") String type);
 }

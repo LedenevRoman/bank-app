@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -40,6 +41,9 @@ public class Agreement {
 
     @Column(name = "period_months")
     private Integer periodMonths;
+
+    @Column(name = "start_date")
+    private LocalDate startDate;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;

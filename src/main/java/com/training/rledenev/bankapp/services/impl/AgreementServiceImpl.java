@@ -16,12 +16,12 @@ import com.training.rledenev.bankapp.repository.AgreementRepository;
 import com.training.rledenev.bankapp.repository.ProductRepository;
 import com.training.rledenev.bankapp.services.AccountService;
 import com.training.rledenev.bankapp.services.AgreementService;
-import com.training.rledenev.bankapp.services.ProductService;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -35,19 +35,16 @@ public class AgreementServiceImpl implements AgreementService {
     private final UserProvider userProvider;
     private final ProductRepository productRepository;
     private final AccountRepository accountRepository;
-    private final ProductService productService;
     private final AccountService accountService;
 
     public AgreementServiceImpl(AgreementRepository agreementRepository, AgreementMapper agreementMapper,
                                 UserProvider userProvider, ProductRepository productRepository,
-                                AccountRepository accountRepository, ProductService productService,
-                                AccountService accountService) {
+                                AccountRepository accountRepository, AccountService accountService) {
         this.agreementRepository = agreementRepository;
         this.agreementMapper = agreementMapper;
         this.userProvider = userProvider;
         this.productRepository = productRepository;
         this.accountRepository = accountRepository;
-        this.productService = productService;
         this.accountService = accountService;
     }
 
@@ -79,6 +76,7 @@ public class AgreementServiceImpl implements AgreementService {
     public void confirmAgreementByManager(AgreementDto agreementDto) {
         Agreement agreement = getAndUpdateAgreement(agreementDto);
         agreement.setStatus(Status.ACTIVE);
+        agreement.setStartDate(LocalDate.now());
         Account account = getAndUpdateAccount(agreementDto, agreement);
         account.setStatus(Status.ACTIVE);
 

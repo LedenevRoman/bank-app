@@ -49,6 +49,7 @@ CREATE TABLE IF NOT EXISTS agreements
     status        varchar(20),
     period_months int,
     sum           decimal(15, 2),
+    start_date    DATE,
     created_at    TIMESTAMP,
     updated_at    TIMESTAMP,
     FOREIGN KEY (account_id) REFERENCES accounts (id),
@@ -58,13 +59,16 @@ CREATE TABLE IF NOT EXISTS agreements
 
 CREATE TABLE IF NOT EXISTS transactions
 (
-    id                INT PRIMARY KEY AUTO_INCREMENT,
-    debit_account_id  int,
-    credit_account_id int,
-    type              varchar(20),
-    amount            decimal(12, 4),
-    description       varchar(255),
-    created_at        TIMESTAMP,
+    id                        INT PRIMARY KEY AUTO_INCREMENT,
+    debit_account_id          int,
+    credit_account_id         int,
+    type                      varchar(20),
+    amount                    decimal(12, 4),
+    currency_code             varchar(3),
+    debit_balance_difference  decimal(12, 4),
+    credit_balance_difference decimal(12, 4),
+    description               varchar(255),
+    created_at                TIMESTAMP,
     FOREIGN KEY (debit_account_id) REFERENCES accounts (id),
     FOREIGN KEY (credit_account_id) REFERENCES accounts (id)
 );

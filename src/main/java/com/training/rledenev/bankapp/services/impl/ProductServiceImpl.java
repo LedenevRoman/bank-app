@@ -2,6 +2,7 @@ package com.training.rledenev.bankapp.services.impl;
 
 import com.training.rledenev.bankapp.dto.AgreementDto;
 import com.training.rledenev.bankapp.dto.ProductDto;
+import com.training.rledenev.bankapp.entity.Product;
 import com.training.rledenev.bankapp.entity.enums.CurrencyCode;
 import com.training.rledenev.bankapp.entity.enums.ProductType;
 import com.training.rledenev.bankapp.exceptions.ProductNotFoundException;
@@ -49,22 +50,29 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     @Override
     public ProductDto getSuitableProduct(AgreementDto agreementDto) {
-        BigDecimal convertedAmount = BigDecimal.valueOf(agreementDto.getSum());
-        if (!agreementDto.getCurrencyCode().equals(CurrencyCode.PLN.toString())) {
+        Product product;
+        if (agreementDto.getProductType().equals(ProductType.DEBIT_CARD.getName()) ||
+                agreementDto.getProductType().equals(ProductType.CREDIT_CARD.getName())) {
+            product = productRepository.getCardProduct(getEnumName(agreementDto.getProductType()))
+                    .orElseThrow(() -> new ProductNotFoundException("No product type"));
+        } else {
+            BigDecimal amount = BigDecimal.valueOf(agreementDto.getSum());
             BigDecimal rate = getRateOfCurrency(agreementDto.getCurrencyCode());
-            convertedAmount = convertedAmount.multiply(rate);
+            BigDecimal convertedAmount = amount.multiply(rate);
+            product = productRepository.getProductByTypeSumAndPeriod(
+                    getEnumName(agreementDto.getProductType()),
+                    convertedAmount.doubleValue(),
+                    agreementDto.getPeriodMonths()
+            ).orElseThrow(() -> new ProductNotFoundException("Amount or period is out of limit"));
         }
-        return productMapper.mapToDto(
-                productRepository.getProductByTypeSumAndPeriod(
-                        getEnumName(agreementDto.getProductType()),
-                        convertedAmount.doubleValue(),
-                        agreementDto.getPeriodMonths()
-                        ).orElseThrow(() -> new ProductNotFoundException("Amount or period is out of limit"))
-        );
+        return productMapper.mapToDto(product);
     }
 
     @Override
     public BigDecimal getRateOfCurrency(String currencyCode) {
+        if (currencyCode.equals(CurrencyCode.PLN.toString())) {
+            return BigDecimal.valueOf(1);
+        }
         JSONObject currencyJson;
         try {
             currencyJson = getCurrencyJsonObject(currencyCode);

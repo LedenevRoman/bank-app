@@ -72,6 +72,16 @@ public class Account {
     )
     private Agreement agreement;
 
+    public void addDebitTransaction(Transaction debitTransaction) {
+        this.debitTransactions.add(debitTransaction);
+        debitTransaction.setDebitAccount(this);
+    }
+
+    public void addCreditTransaction(Transaction creditTransaction) {
+        this.creditTransactions.add(creditTransaction);
+        creditTransaction.setCreditAccount(this);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

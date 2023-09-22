@@ -6,9 +6,11 @@ import com.training.rledenev.bankapp.security.jwt.JwtFilter;
 import com.training.rledenev.bankapp.security.jwt.JwtProvider;
 import com.training.rledenev.bankapp.services.bot.AuthorizedUserService;
 import com.training.rledenev.bankapp.services.bot.action.ActionMessageHandlerService;
+import com.training.rledenev.bankapp.services.bot.action.impl.AccountsMessageHandlerService;
 import com.training.rledenev.bankapp.services.bot.action.impl.AgreementMessageHandlerService;
 import com.training.rledenev.bankapp.services.bot.action.impl.CurrencyRatesHandlerService;
 import com.training.rledenev.bankapp.services.bot.action.impl.ProductMessageHandlerService;
+import com.training.rledenev.bankapp.services.bot.action.impl.transaction.impl.TransactionMessageHandlerServiceImpl;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
@@ -26,6 +28,7 @@ public class AuthorizedUserServiceImpl implements AuthorizedUserService {
     private final AgreementMessageHandlerService agreementsMessageHandlerService;
     private final ProductMessageHandlerService productMessageHandlerService;
     private final CurrencyRatesHandlerService currencyRatesHandlerService;
+    private final AccountsMessageHandlerService accountsMessageHandlerService;
     private final JwtProvider jwtProvider;
     private final JwtFilter jwtFilter;
     private final UserProvider userProvider;
@@ -33,6 +36,7 @@ public class AuthorizedUserServiceImpl implements AuthorizedUserService {
 
     @PostConstruct
     private void init() {
+        NAME_ACTION_MAP.put(MY_ACCOUNTS, accountsMessageHandlerService);
         NAME_ACTION_MAP.put(NEW_AGREEMENTS, agreementsMessageHandlerService);
         NAME_ACTION_MAP.put(PRODUCTS, productMessageHandlerService);
         NAME_ACTION_MAP.put(CURRENCY_RATES, currencyRatesHandlerService);
@@ -40,11 +44,13 @@ public class AuthorizedUserServiceImpl implements AuthorizedUserService {
 
     public AuthorizedUserServiceImpl(AgreementMessageHandlerService agreementsMessageHandlerService,
                                      ProductMessageHandlerService productMessageHandlerService,
-                                     CurrencyRatesHandlerService currencyRatesHandlerService, JwtProvider jwtProvider,
-                                     JwtFilter jwtFilter, UserProvider userProvider) {
+                                     CurrencyRatesHandlerService currencyRatesHandlerService,
+                                     AccountsMessageHandlerService accountsMessageHandlerService,
+                                     JwtProvider jwtProvider, JwtFilter jwtFilter, UserProvider userProvider) {
         this.agreementsMessageHandlerService = agreementsMessageHandlerService;
         this.productMessageHandlerService = productMessageHandlerService;
         this.currencyRatesHandlerService = currencyRatesHandlerService;
+        this.accountsMessageHandlerService = accountsMessageHandlerService;
         this.jwtProvider = jwtProvider;
         this.jwtFilter = jwtFilter;
         this.userProvider = userProvider;
@@ -59,6 +65,8 @@ public class AuthorizedUserServiceImpl implements AuthorizedUserService {
                 CHAT_ID_ACTION_NAME_MAP.remove(chatId);
                 ProductMessageHandlerService.CHAT_ID_AGREEMENT_DTO_MAP.remove(chatId);
                 AgreementMessageHandlerService.CHAT_ID_AGREEMENT_DTO_MAP.remove(chatId);
+                AccountsMessageHandlerService.CHAT_ID_ACCOUNT_DTO_MAP.remove(chatId);
+                TransactionMessageHandlerServiceImpl.CHAT_ID_TRANSACTION_DTO_MAP.remove(chatId);
                 return createSendMessageWithButtons(chatId, SELECT_ACTION, getListOfActionsByUserRole(userRole));
             }
             String actionName = CHAT_ID_ACTION_NAME_MAP.get(chatId);
@@ -71,6 +79,10 @@ public class AuthorizedUserServiceImpl implements AuthorizedUserService {
             return createSendMessageWithButtons(chatId, UNKNOWN_INPUT_MESSAGE, getListOfActionsByUserRole(userRole));
         } else {
             UpdateHandlerServiceImpl.CHAT_ID_TOKEN_MAP.remove(chatId);
+            ProductMessageHandlerService.CHAT_ID_AGREEMENT_DTO_MAP.remove(chatId);
+            AgreementMessageHandlerService.CHAT_ID_AGREEMENT_DTO_MAP.remove(chatId);
+            AccountsMessageHandlerService.CHAT_ID_ACCOUNT_DTO_MAP.remove(chatId);
+            TransactionMessageHandlerServiceImpl.CHAT_ID_TRANSACTION_DTO_MAP.remove(chatId);
             return createSendMessageWithButtons(chatId, SESSION_CLOSED, List.of(REGISTER_USER, LOG_IN));
         }
     }

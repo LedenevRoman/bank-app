@@ -15,7 +15,7 @@ public interface AgreementMapper {
             nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
     Agreement mapToEntity(AgreementDto agreementDto);
 
-    @Named("mapToDto")
+    @Named("toAgreementDto")
     @Mapping(source = "sum", target = "sum", qualifiedByName = "bigDecimalToDouble",
             nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
     @Mapping(source = "product", target = "interestRate", qualifiedByName = "getInterestRateFromProduct",
@@ -24,7 +24,7 @@ public interface AgreementMapper {
     @Mapping(source = "account", target = "currencyCode", qualifiedByName = "getCurrencyCodeFromAccount")
     AgreementDto mapToDto(Agreement agreement);
 
-    @IterableMapping(qualifiedByName = "mapToDto")
+    @IterableMapping(qualifiedByName = "toAgreementDto")
     List<AgreementDto> mapToListDtos(List<Agreement> agreements);
 
     @Named("getProductName")

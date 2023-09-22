@@ -2,6 +2,7 @@ package com.training.rledenev.bankapp.services.bot.action.impl;
 
 import com.training.rledenev.bankapp.dto.AgreementDto;
 import com.training.rledenev.bankapp.dto.ProductDto;
+import com.training.rledenev.bankapp.entity.enums.ProductType;
 import com.training.rledenev.bankapp.entity.enums.Role;
 import com.training.rledenev.bankapp.exceptions.ProductNotFoundException;
 import com.training.rledenev.bankapp.services.AgreementService;
@@ -12,6 +13,8 @@ import com.training.rledenev.bankapp.services.bot.impl.BotUtils;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -33,7 +36,8 @@ public class ProductMessageHandlerService implements ActionMessageHandlerService
     @Override
     public SendMessage handleMessage(long chatId, String message, Role role) {
         if (CHAT_ID_AGREEMENT_DTO_MAP.get(chatId) == null) {
-            List<String> productTypes = productService.getAllActiveProductDtos().stream()
+            List<ProductDto> productDtos = productService.getAllActiveProductDtos();
+            List<String> productTypes = productDtos.stream()
                     .map(ProductDto::getType)
                     .distinct()
                     .collect(Collectors.toList());
@@ -57,7 +61,20 @@ public class ProductMessageHandlerService implements ActionMessageHandlerService
             AgreementDto agreementDto = CHAT_ID_AGREEMENT_DTO_MAP.get(chatId);
             if (agreementDto.getCurrencyCode() == null) {
                 agreementDto.setCurrencyCode(message);
-                return createSendMessage(chatId, ENTER_AMOUNT);
+                if (agreementDto.getProductType().equals(ProductType.DEBIT_CARD.getName())
+                        || agreementDto.getProductType().equals(ProductType.CREDIT_CARD.getName())) {
+                    ProductDto productDto = productService.getSuitableProduct(agreementDto);
+                    BigDecimal amount = BigDecimal.valueOf(productDto.getMinLimit())
+                            .divide(productService.getRateOfCurrency(agreementDto.getCurrencyCode()), 2,
+                                    RoundingMode.HALF_UP);
+                    agreementDto.setPeriodMonths(productDto.getPeriodMonths());
+                    agreementDto.setSum(amount.doubleValue());
+                    agreementDto.setProductName(productDto.getName());
+                    return createSendMessageWithButtons(chatId, String.format(SUITABLE_PRODUCT,
+                            productDto.getName(), productDto.getInterestRate()), List.of(CONFIRM, BACK));
+                } else {
+                    return createSendMessage(chatId, ENTER_AMOUNT);
+                }
             }
             if (agreementDto.getSum() == null) {
                 try {

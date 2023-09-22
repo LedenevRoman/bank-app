@@ -1,5 +1,6 @@
 package com.training.rledenev.bankapp.entity;
 
+import com.training.rledenev.bankapp.entity.enums.CurrencyCode;
 import com.training.rledenev.bankapp.entity.enums.TransactionType;
 import lombok.Getter;
 import lombok.Setter;
@@ -33,6 +34,16 @@ public class Transaction {
 
     @Column(name = "amount")
     private BigDecimal amount;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "currency_code")
+    private CurrencyCode currencyCode;
+
+    @Column(name = "debit_balance_difference")
+    private BigDecimal debitBalanceDifference;
+
+    @Column(name = "credit_balance_difference")
+    private BigDecimal creditBalanceDifference;
 
     @Column(name = "description")
     private String description;
