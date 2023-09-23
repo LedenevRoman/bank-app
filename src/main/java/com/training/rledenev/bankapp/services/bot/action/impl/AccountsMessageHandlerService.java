@@ -14,6 +14,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -115,7 +116,7 @@ public class AccountsMessageHandlerService implements ActionMessageHandlerServic
                         transactionDto.getCreditAccountNumber()));
             }
 
-            stringBuilder.append(String.format(ANOTHER_TRANSACTION_INFO, transactionDto.getCreatedAt(),
+            stringBuilder.append(String.format(Locale.ENGLISH, ANOTHER_TRANSACTION_INFO, transactionDto.getCreatedAt(),
                     transactionDto.getType(), transactionDto.getDescription()));
         }
     }
@@ -134,7 +135,7 @@ public class AccountsMessageHandlerService implements ActionMessageHandlerServic
                         transactionDto.getCreditAccountNumber()));
             }
 
-            stringBuilder.append(String.format(ANOTHER_TRANSACTION_INFO, transactionDto.getCreatedAt(),
+            stringBuilder.append(String.format(Locale.ENGLISH, ANOTHER_TRANSACTION_INFO, transactionDto.getCreatedAt(),
                     transactionDto.getType(), transactionDto.getDescription()));
         }
     }

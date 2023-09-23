@@ -39,7 +39,7 @@ public class TransactionServiceImpl implements TransactionService {
         return transactionMapper.mapToListDto(transactions);
     }
 
-    @Transactional(isolation = Isolation.SERIALIZABLE)
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     @Override
     public void createTransaction(TransactionDto transactionDto) {
         String debitAccountNumber = transactionDto.getDebitAccountNumber();
