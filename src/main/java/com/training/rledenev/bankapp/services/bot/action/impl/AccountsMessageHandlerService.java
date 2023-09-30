@@ -17,14 +17,13 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 
 import static com.training.rledenev.bankapp.services.bot.impl.BotUtils.*;
 
 @Service
 public class AccountsMessageHandlerService implements ActionMessageHandlerService {
     public static final Map<Long, AccountDto> CHAT_ID_ACCOUNT_DTO_MAP = new ConcurrentHashMap<>();
-    private static final  Map<Long, Boolean> CHAT_ID_IS_MAKING_TRANSACTION = new ConcurrentHashMap<>();
+    private static final Map<Long, Boolean> CHAT_ID_IS_MAKING_TRANSACTION = new ConcurrentHashMap<>();
     private final AccountService accountService;
     private final TransactionService transactionService;
     private final TransactionMessageHandlerService transactionMessageHandlerService;
@@ -87,57 +86,49 @@ public class AccountsMessageHandlerService implements ActionMessageHandlerServic
     }
 
     private String getAllTransactionsMessage(AccountDto accountDto, List<TransactionDto> allTransactionsDto) {
-        List<TransactionDto> debitTransactionDtos = allTransactionsDto.stream()
-                .filter(transactionDto -> transactionDto.getDebitAccountNumber().equals(accountDto.getNumber()))
-                .collect(Collectors.toList());
-        List<TransactionDto> creditTransactionDtos = allTransactionsDto.stream()
-                .filter(transactionDto -> transactionDto.getCreditAccountNumber().equals(accountDto.getNumber()))
-                .collect(Collectors.toList());
-
-        StringBuilder stringBuilder = new StringBuilder();
-        getDebitAccountMessage(stringBuilder, debitTransactionDtos, accountDto.getCurrencyCode());
-        stringBuilder.append("\n");
-        getCreditAccountMessage(stringBuilder, creditTransactionDtos, accountDto.getCurrencyCode());
+        StringBuilder stringBuilder = new StringBuilder(LIST_TRANSACTIONS);
+        allTransactionsDto.forEach(transactionDto -> {
+            if (transactionDto.getDebitAccountNumber().equals(accountDto.getNumber())) {
+                getDebitAccountMessage(stringBuilder, transactionDto, accountDto.getCurrencyCode());
+            } else {
+                getCreditAccountMessage(stringBuilder, transactionDto, accountDto.getCurrencyCode());
+            }
+        });
 
         return stringBuilder.toString();
     }
 
-    private void getDebitAccountMessage(StringBuilder stringBuilder, List<TransactionDto> debitTransactionDtos,
+    private void getDebitAccountMessage(StringBuilder stringBuilder, TransactionDto transactionDto,
                                         String accountCurrency) {
-        stringBuilder.append(LIST_DEBIT_TRANSACTION);
-        for (TransactionDto transactionDto : debitTransactionDtos) {
-            if (transactionDto.getDebitBalanceDifference() == null) {
-                stringBuilder.append(String.format(AMOUNT_IN_SAME_CURRENCY_DEBIT_TRANSACTION_INFO,
-                        transactionDto.getAmount(), transactionDto.getCurrencyCode(),
-                        transactionDto.getCreditAccountNumber()));
-            } else {
-                stringBuilder.append(String.format(AMOUNT_DEBIT_TRANSACTION_INFO, transactionDto.getAmount(),
-                        transactionDto.getCurrencyCode(), transactionDto.getDebitBalanceDifference(), accountCurrency,
-                        transactionDto.getCreditAccountNumber()));
-            }
-
-            stringBuilder.append(String.format(Locale.ENGLISH, ANOTHER_TRANSACTION_INFO, transactionDto.getCreatedAt(),
-                    transactionDto.getType(), transactionDto.getDescription()));
+        if (transactionDto.getCurrencyCode().equals(accountCurrency)) {
+            stringBuilder.append(String.format(AMOUNT_IN_SAME_CURRENCY_DEBIT_TRANSACTION_INFO,
+                    transactionDto.getAmount(), transactionDto.getCurrencyCode(),
+                    transactionDto.getCreditAccountNumber()));
+        } else {
+            stringBuilder.append(String.format(AMOUNT_DEBIT_TRANSACTION_INFO, transactionDto.getAmount(),
+                    transactionDto.getCurrencyCode(), transactionDto.getDebitBalanceDifference(), accountCurrency,
+                    transactionDto.getCreditAccountNumber()));
         }
+        appendAnotherInfo(stringBuilder, transactionDto);
     }
 
-    private void getCreditAccountMessage(StringBuilder stringBuilder, List<TransactionDto> creditTransactionDtos,
+    private void getCreditAccountMessage(StringBuilder stringBuilder, TransactionDto transactionDto,
                                          String accountCurrency) {
-        stringBuilder.append(LIST_CREDIT_TRANSACTION);
-        for (TransactionDto transactionDto : creditTransactionDtos) {
-            if (transactionDto.getCreditBalanceDifference() == null) {
-                stringBuilder.append(String.format(AMOUNT_IN_SAME_CURRENCY_CREDIT_TRANSACTION_INFO,
-                        transactionDto.getAmount(), transactionDto.getCurrencyCode(),
-                        transactionDto.getCreditAccountNumber()));
-            } else {
-                stringBuilder.append(String.format(AMOUNT_CREDIT_TRANSACTION_INFO, transactionDto.getAmount(),
-                        transactionDto.getCurrencyCode(), transactionDto.getCreditBalanceDifference(), accountCurrency,
-                        transactionDto.getCreditAccountNumber()));
-            }
-
-            stringBuilder.append(String.format(Locale.ENGLISH, ANOTHER_TRANSACTION_INFO, transactionDto.getCreatedAt(),
-                    transactionDto.getType(), transactionDto.getDescription()));
+        if (transactionDto.getCurrencyCode().equals(accountCurrency)) {
+            stringBuilder.append(String.format(AMOUNT_IN_SAME_CURRENCY_CREDIT_TRANSACTION_INFO,
+                    transactionDto.getAmount(), transactionDto.getCurrencyCode(),
+                    transactionDto.getCreditAccountNumber()));
+        } else {
+            stringBuilder.append(String.format(AMOUNT_CREDIT_TRANSACTION_INFO, transactionDto.getAmount(),
+                    transactionDto.getCurrencyCode(), transactionDto.getCreditBalanceDifference(), accountCurrency,
+                    transactionDto.getCreditAccountNumber()));
         }
+        appendAnotherInfo(stringBuilder, transactionDto);
+    }
+
+    private static void appendAnotherInfo(StringBuilder stringBuilder, TransactionDto transactionDto) {
+        stringBuilder.append(String.format(Locale.ENGLISH, ANOTHER_TRANSACTION_INFO, transactionDto.getCreatedAt(),
+                transactionDto.getType(), transactionDto.getDescription()));
     }
 
     private String getCustomAccountInfo(AccountDto accountDto) {

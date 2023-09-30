@@ -25,8 +25,8 @@ public final class BotUtils {
     public static final String BLOCK = "Block";
     public static final String TRANSACTION_COMPLETED = "Transaction completed successfully";
     public static final String TRANSACTION_CANCELED = "Transaction was canceled";
-    public static final String SOMETHING_WRONG = "Something went wrong, check the input data.";
-    public static final String INSUFFICIENT_FUNDS = "Insufficient funds.";
+    public static final String SOMETHING_WRONG = "Transaction failed. Something went wrong, check the input data.";
+    public static final String INSUFFICIENT_FUNDS = "Transaction failed. Insufficient funds.";
     public static final String UNKNOWN_INPUT_MESSAGE = "Sorry, I don't know how to handle such command yet :(";
     public static final String ENTER_FIRST_NAME = "Please enter your first name:";
     public static final String ENTER_LAST_NAME = "Please enter your last name:";
@@ -77,8 +77,7 @@ public final class BotUtils {
     public static final String ENTER_ACCOUNT_NUMBER = "Enter the account number to which the transfer should be made:";
     public static final String SELECT_TYPE = "Select type:";
     public static final String ENTER_DESCRIPTION = "Enter description:";
-    public static final String LIST_DEBIT_TRANSACTION = "Here is a list of your debit transactions:" + "\n";
-    public static final String LIST_CREDIT_TRANSACTION = "Here is a list of your credit transactions:" + "\n";
+    public static final String LIST_TRANSACTIONS = "Here is a list of your transactions:" + "\n";
     public static final String AMOUNT_DEBIT_TRANSACTION_INFO = "- %.2f %s (%.2f %s), on account: %s." + "\n";
     public static final String AMOUNT_IN_SAME_CURRENCY_DEBIT_TRANSACTION_INFO = "- %.2f %s, on account: %s." + "\n";
     public static final String AMOUNT_CREDIT_TRANSACTION_INFO = "+ %.2f %s (%.2f %s), from account: %s." + "\n";

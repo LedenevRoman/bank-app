@@ -1,15 +1,11 @@
 package com.training.rledenev.bankapp.controllers;
 
 import com.training.rledenev.bankapp.dto.AccountDto;
-import com.training.rledenev.bankapp.entity.Account;
 import com.training.rledenev.bankapp.services.AccountService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "/account")
@@ -21,9 +17,15 @@ public class AccountController {
         this.accountService = accountService;
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<Long> createManager(@RequestBody AccountDto accountDto) {
-        Account account = accountService.createAccount(accountDto);
-        return ResponseEntity.created(URI.create("/" + account.getId())).body(account.getId());
+    @GetMapping("/all/client")
+    public ResponseEntity<List<AccountDto>> getAccountsForClient() {
+        List<AccountDto> accountDtos = accountService.getAccountsForClient();
+        return ResponseEntity.ok().body(accountDtos);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteAccount(@PathVariable("id") Long id) {
+        accountService.deleteAccount(id);
+        return ResponseEntity.ok().build();
     }
 }

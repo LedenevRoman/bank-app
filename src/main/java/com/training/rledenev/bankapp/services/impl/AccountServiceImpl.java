@@ -11,7 +11,6 @@ import com.training.rledenev.bankapp.services.AccountService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -25,15 +24,6 @@ public class AccountServiceImpl implements AccountService {
         this.accountMapper = accountMapper;
         this.accountRepository = accountRepository;
         this.userProvider = userProvider;
-    }
-
-    @Transactional
-    @Override
-    public Account createAccount(AccountDto accountDto) {
-        Account account = accountMapper.mapToEntity(accountDto);
-        account.setCreatedAt(LocalDateTime.now());
-        accountRepository.save(account);
-        return account;
     }
 
     @Transactional
@@ -54,5 +44,10 @@ public class AccountServiceImpl implements AccountService {
     public Account getAccountByNumber(String accountNumber) {
         return accountRepository.getByNumber(accountNumber)
                 .orElseThrow(() -> new AccountNotFoundException("Account not found with number " + accountNumber));
+    }
+
+    @Override
+    public void deleteAccount(Long id) {
+        accountRepository.deleteById(id);
     }
 }

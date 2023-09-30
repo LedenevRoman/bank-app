@@ -56,4 +56,9 @@ public class UserServiceImpl implements UserService {
         }
         throw new AuthenticationException("Email or password is not correct");
     }
+
+    @Override
+    public Role getAuthorizedUserRole() {
+        return userProvider.getCurrentUser().getRole();
+    }
 }

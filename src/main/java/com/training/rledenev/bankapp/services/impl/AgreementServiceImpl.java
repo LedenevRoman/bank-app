@@ -5,7 +5,6 @@ import com.training.rledenev.bankapp.entity.Account;
 import com.training.rledenev.bankapp.entity.Agreement;
 import com.training.rledenev.bankapp.entity.Product;
 import com.training.rledenev.bankapp.entity.enums.CurrencyCode;
-import com.training.rledenev.bankapp.entity.enums.ProductType;
 import com.training.rledenev.bankapp.entity.enums.Status;
 import com.training.rledenev.bankapp.exceptions.AgreementNotFoundException;
 import com.training.rledenev.bankapp.exceptions.ProductNotFoundException;
@@ -25,8 +24,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-
-import static com.training.rledenev.bankapp.services.impl.ServiceUtils.getEnumName;
 
 @Service
 public class AgreementServiceImpl implements AgreementService {
@@ -128,7 +125,6 @@ public class AgreementServiceImpl implements AgreementService {
             number = RandomStringUtils.randomNumeric(16);
         }
         account.setNumber(number);
-        account.setType(ProductType.valueOf(getEnumName(agreementDto.getProductType())));
         account.setStatus(Status.NEW);
         account.setCurrencyCode(CurrencyCode.valueOf(agreementDto.getCurrencyCode()));
         account.setCreatedAt(LocalDateTime.now());

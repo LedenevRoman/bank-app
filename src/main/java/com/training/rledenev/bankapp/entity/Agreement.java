@@ -56,11 +56,6 @@ public class Agreement {
         product.addAgreement(this);
     }
 
-    public void setAccount(Account account) {
-        this.account = account;
-        account.setAgreement(this);
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

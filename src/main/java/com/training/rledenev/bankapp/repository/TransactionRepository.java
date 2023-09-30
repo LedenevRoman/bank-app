@@ -14,6 +14,6 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     @Query("select distinct t from Transaction t " +
             "where t.creditAccount.number = :accountNumber " +
             "or t.debitAccount.number = :accountNumber " +
-            "order by t.createdAt asc")
+            "order by t.createdAt desc")
     List<Transaction> getAllTransactionsWithAccountNumber(@Param("accountNumber") String accountNumber);
 }

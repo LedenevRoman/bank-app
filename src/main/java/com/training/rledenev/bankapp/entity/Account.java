@@ -1,7 +1,6 @@
 package com.training.rledenev.bankapp.entity;
 
 import com.training.rledenev.bankapp.entity.enums.CurrencyCode;
-import com.training.rledenev.bankapp.entity.enums.ProductType;
 import com.training.rledenev.bankapp.entity.enums.Status;
 import lombok.Getter;
 import lombok.Setter;
@@ -29,10 +28,6 @@ public class Account {
 
     @Column(name = "number")
     private String number;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "type")
-    private ProductType type;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
@@ -71,16 +66,6 @@ public class Account {
             fetch = FetchType.LAZY
     )
     private Agreement agreement;
-
-    public void addDebitTransaction(Transaction debitTransaction) {
-        this.debitTransactions.add(debitTransaction);
-        debitTransaction.setDebitAccount(this);
-    }
-
-    public void addCreditTransaction(Transaction creditTransaction) {
-        this.creditTransactions.add(creditTransaction);
-        creditTransaction.setCreditAccount(this);
-    }
 
     @Override
     public boolean equals(Object o) {

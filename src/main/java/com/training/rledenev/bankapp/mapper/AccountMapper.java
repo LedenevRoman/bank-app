@@ -11,10 +11,9 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
-@Mapper(componentModel = "spring", uses = ProductMapper.class)
+@Mapper(componentModel = "spring")
 public interface AccountMapper {
 
-    @Mapping(source = "type", target = "type", qualifiedByName = "stringToEnumName")
     @Mapping(source = "status", target = "status", qualifiedByName = "stringToEnumName")
     @Mapping(source = "currencyCode", target = "currencyCode", qualifiedByName = "stringToEnumName")
     @Mapping(source = "balance", target = "balance", qualifiedByName = "doubleToBigDecimal",
@@ -22,14 +21,13 @@ public interface AccountMapper {
     Account mapToEntity(AccountDto accountDto);
 
     @Named("toAccountDto")
-    @Mapping(source = "balance", target = "balance", qualifiedByName = "bigDecimalToDouble",
-            nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
-    @Mapping(source = "agreement", target = "productName", qualifiedByName = "getProductNameFromAgreement")
-    @Mapping(source = "agreement", target = "interestRate", qualifiedByName = "getInterestRateFromAgreement")
+    @Mapping(source = "agreement.product.name", target = "productName")
+    @Mapping(source = "agreement.product.interestRate", target = "interestRate")
     @Mapping(source = "client", target = "owner", qualifiedByName = "getOwnerFullNameFromClient")
     @Mapping(source = "agreement", target = "paymentTerm", qualifiedByName = "getPaymentTermFromAgreement")
     @Mapping(source = "currencyCode", target = "currencyName", qualifiedByName = "getCurrencyNameFromCode")
-    @Mapping(source = "agreement", target = "startDate", qualifiedByName = "getStartDateFromAgreement")
+    @Mapping(source = "agreement.product.type", target = "type")
+    @Mapping(source = "agreement.startDate", target = "startDate")
     AccountDto mapToDto(Account account);
 
     @IterableMapping(qualifiedByName = "toAccountDto")
@@ -43,16 +41,6 @@ public interface AccountMapper {
     @Named("doubleToBigDecimal")
     default BigDecimal doubleToBigDecimal(Double value) {
         return BigDecimal.valueOf(value);
-    }
-
-    @Named("getProductNameFromAgreement")
-    default String getProductNameFromAgreement(Agreement agreement) {
-        return agreement.getProduct().getName();
-    }
-
-    @Named("getInterestRateFromAgreement")
-    default Double getInterestRateFromAgreement(Agreement agreement) {
-        return agreement.getProduct().getInterestRate().doubleValue();
     }
 
     @Named("getOwnerFullNameFromClient")
@@ -70,10 +58,5 @@ public interface AccountMapper {
     @Named("getCurrencyNameFromCode")
     default String getCurrencyNameFromCode(CurrencyCode currencyCode) {
         return currencyCode.getCurrencyName();
-    }
-
-    @Named("getStartDateFromAgreement")
-    default LocalDate getStartDateFromAgreement(Agreement agreement) {
-        return agreement.getStartDate();
     }
 }

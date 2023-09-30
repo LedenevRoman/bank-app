@@ -31,7 +31,6 @@ CREATE TABLE IF NOT EXISTS accounts
     id            INT PRIMARY KEY AUTO_INCREMENT,
     client_id     int,
     number        varchar(28) UNIQUE,
-    type          varchar(20),
     status        varchar(20),
     balance       decimal(15, 2),
     currency_code varchar(3),
