@@ -18,7 +18,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static com.training.rledenev.bankapp.services.bot.impl.BotUtils.*;
+import static com.training.rledenev.bankapp.services.bot.util.BotUtils.*;
 
 @Service
 public class AccountsMessageHandlerService implements ActionMessageHandlerService {
@@ -76,7 +76,7 @@ public class AccountsMessageHandlerService implements ActionMessageHandlerServic
             }
             if (message.equals(VIEW_ALL_TRANSACTIONS)) {
                 List<TransactionDto> allTransactionsDto = transactionService
-                        .getAllTransactionsOfAccount(accountDto);
+                        .getAllTransactionsOfAccount(accountDto.getNumber());
                 return createSendMessageWithButtons(chatId, getAllTransactionsMessage(accountDto, allTransactionsDto),
                         List.of(BACK_TO_LIST_ACCOUNTS));
             }
@@ -117,11 +117,11 @@ public class AccountsMessageHandlerService implements ActionMessageHandlerServic
         if (transactionDto.getCurrencyCode().equals(accountCurrency)) {
             stringBuilder.append(String.format(AMOUNT_IN_SAME_CURRENCY_CREDIT_TRANSACTION_INFO,
                     transactionDto.getAmount(), transactionDto.getCurrencyCode(),
-                    transactionDto.getCreditAccountNumber()));
+                    transactionDto.getDebitAccountNumber()));
         } else {
             stringBuilder.append(String.format(AMOUNT_CREDIT_TRANSACTION_INFO, transactionDto.getAmount(),
                     transactionDto.getCurrencyCode(), transactionDto.getCreditBalanceDifference(), accountCurrency,
-                    transactionDto.getCreditAccountNumber()));
+                    transactionDto.getDebitAccountNumber()));
         }
         appendAnotherInfo(stringBuilder, transactionDto);
     }

@@ -2,7 +2,7 @@ package com.training.rledenev.bankapp.services.bot.action.impl;
 
 import com.training.rledenev.bankapp.entity.enums.CurrencyCode;
 import com.training.rledenev.bankapp.entity.enums.Role;
-import com.training.rledenev.bankapp.services.ProductService;
+import com.training.rledenev.bankapp.services.CurrencyService;
 import com.training.rledenev.bankapp.services.bot.action.ActionMessageHandlerService;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -13,14 +13,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.training.rledenev.bankapp.services.bot.impl.BotUtils.*;
+import static com.training.rledenev.bankapp.services.bot.util.BotUtils.*;
 
 @Service
 public class CurrencyRatesHandlerService implements ActionMessageHandlerService {
-    private final ProductService productService;
+    private final CurrencyService currencyService;
 
-    public CurrencyRatesHandlerService(ProductService productService) {
-        this.productService = productService;
+    public CurrencyRatesHandlerService(CurrencyService currencyService) {
+        this.currencyService = currencyService;
     }
 
     @Override
@@ -35,7 +35,7 @@ public class CurrencyRatesHandlerService implements ActionMessageHandlerService 
             return createSendMessageWithButtons(chatId, SELECT_CURRENCY, currencyButtons);
         }
         if (currenciesWithoutDefaultCurrency.contains(message)) {
-            Double rate = productService.getRateOfCurrency(message).doubleValue();
+            Double rate = currencyService.getRateOfCurrency(message).doubleValue();
             String currencyName = CurrencyCode.valueOf(message).getCurrencyName();
             LocalDate date = LocalDate.now();
             return createSendMessageWithButtons(chatId, String.format(OFFICIAL_CURRENCY_RATE, currencyName,

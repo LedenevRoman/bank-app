@@ -3,35 +3,29 @@ package com.training.rledenev.bankapp.services.impl;
 import com.training.rledenev.bankapp.dto.AgreementDto;
 import com.training.rledenev.bankapp.dto.ProductDto;
 import com.training.rledenev.bankapp.entity.Product;
-import com.training.rledenev.bankapp.entity.enums.CurrencyCode;
 import com.training.rledenev.bankapp.entity.enums.ProductType;
 import com.training.rledenev.bankapp.exceptions.ProductNotFoundException;
-import com.training.rledenev.bankapp.exceptions.RequestApiException;
 import com.training.rledenev.bankapp.mapper.ProductMapper;
 import com.training.rledenev.bankapp.repository.ProductRepository;
+import com.training.rledenev.bankapp.services.CurrencyService;
 import com.training.rledenev.bankapp.services.ProductService;
-import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.constraints.NotNull;
-import java.io.IOException;
-import java.io.InputStream;
 import java.math.BigDecimal;
-import java.net.URL;
 import java.util.List;
-import java.util.Scanner;
-
-import static com.training.rledenev.bankapp.services.impl.ServiceUtils.getEnumName;
 
 @Service
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
+    private final CurrencyService currencyService;
 
-    public ProductServiceImpl(ProductRepository productRepository, ProductMapper productMapper) {
+    public ProductServiceImpl(ProductRepository productRepository, ProductMapper productMapper,
+                              CurrencyService currencyService) {
         this.productRepository = productRepository;
         this.productMapper = productMapper;
+        this.currencyService = currencyService;
     }
 
     @Transactional
@@ -57,7 +51,7 @@ public class ProductServiceImpl implements ProductService {
                     .orElseThrow(() -> new ProductNotFoundException("No product type"));
         } else {
             BigDecimal amount = BigDecimal.valueOf(agreementDto.getSum());
-            BigDecimal rate = getRateOfCurrency(agreementDto.getCurrencyCode());
+            BigDecimal rate = currencyService.getRateOfCurrency(agreementDto.getCurrencyCode());
             BigDecimal convertedAmount = amount.multiply(rate);
             product = productRepository.getProductByTypeSumAndPeriod(
                     getEnumName(agreementDto.getProductType()),
@@ -68,29 +62,7 @@ public class ProductServiceImpl implements ProductService {
         return productMapper.mapToDto(product);
     }
 
-    @Override
-    public BigDecimal getRateOfCurrency(String currencyCode) {
-        if (currencyCode.equals(CurrencyCode.PLN.toString())) {
-            return BigDecimal.valueOf(1);
-        }
-        JSONObject currencyJson;
-        try {
-            currencyJson = getCurrencyJsonObject(currencyCode);
-        } catch (IOException e) {
-            throw new RequestApiException(e.getMessage());
-        }
-        JSONObject subObject = currencyJson.getJSONArray("rates").getJSONObject(0);
-        return BigDecimal.valueOf(subObject.getDouble("mid"));
-    }
-
-    @NotNull
-    private static JSONObject getCurrencyJsonObject(String message) throws IOException {
-        URL url = new URL("http://api.nbp.pl/api/exchangerates/rates/A/" + message);
-        Scanner scanner = new Scanner((InputStream) url.getContent());
-        StringBuilder result = new StringBuilder();
-        while (scanner.hasNext()) {
-            result.append(scanner.nextLine());
-        }
-        return new JSONObject(result.toString());
+    private static String getEnumName(String string) {
+        return string.toUpperCase().replaceAll("\\s", "_");
     }
 }

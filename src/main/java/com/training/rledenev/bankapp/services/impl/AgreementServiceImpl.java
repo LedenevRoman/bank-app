@@ -5,6 +5,7 @@ import com.training.rledenev.bankapp.entity.Account;
 import com.training.rledenev.bankapp.entity.Agreement;
 import com.training.rledenev.bankapp.entity.Product;
 import com.training.rledenev.bankapp.entity.enums.CurrencyCode;
+import com.training.rledenev.bankapp.entity.enums.ProductType;
 import com.training.rledenev.bankapp.entity.enums.Status;
 import com.training.rledenev.bankapp.exceptions.AgreementNotFoundException;
 import com.training.rledenev.bankapp.exceptions.ProductNotFoundException;
@@ -15,11 +16,11 @@ import com.training.rledenev.bankapp.repository.AgreementRepository;
 import com.training.rledenev.bankapp.repository.ProductRepository;
 import com.training.rledenev.bankapp.services.AccountService;
 import com.training.rledenev.bankapp.services.AgreementService;
+import com.training.rledenev.bankapp.services.TransactionService;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -33,16 +34,18 @@ public class AgreementServiceImpl implements AgreementService {
     private final ProductRepository productRepository;
     private final AccountRepository accountRepository;
     private final AccountService accountService;
+    private final TransactionService transactionService;
 
     public AgreementServiceImpl(AgreementRepository agreementRepository, AgreementMapper agreementMapper,
                                 UserProvider userProvider, ProductRepository productRepository,
-                                AccountRepository accountRepository, AccountService accountService) {
+                                AccountRepository accountRepository, AccountService accountService, TransactionService transactionService) {
         this.agreementRepository = agreementRepository;
         this.agreementMapper = agreementMapper;
         this.userProvider = userProvider;
         this.productRepository = productRepository;
         this.accountRepository = accountRepository;
         this.accountService = accountService;
+        this.transactionService = transactionService;
     }
 
     @Transactional
@@ -53,7 +56,6 @@ public class AgreementServiceImpl implements AgreementService {
         agreement.setProduct(productOptional.orElseThrow(() -> new ProductNotFoundException("Product not found")));
 
         Account account = getNewAccount(agreementDto);
-        account.setBalance(agreement.getSum());
         account.setAgreement(agreement);
 
         accountRepository.save(account);
@@ -70,11 +72,19 @@ public class AgreementServiceImpl implements AgreementService {
 
     @Transactional
     @Override
-    public void confirmAgreementByManager(AgreementDto agreementDto) {
-        Agreement agreement = getAndUpdateAgreement(agreementDto);
+    public void confirmAgreementByManager(Long agreementId) {
+        Agreement agreement = getAndUpdateAgreement(agreementId);
         agreement.setStatus(Status.ACTIVE);
         agreement.setStartDate(LocalDate.now());
-        Account account = getAndUpdateAccount(agreementDto, agreement);
+
+        Account account = agreement.getAccount();
+        if (agreement.getProduct().getType() == ProductType.LOAN
+                || agreement.getProduct().getType() == ProductType.CREDIT_CARD) {
+            transactionService.giveCreditFundsToAccount(account, agreement.getSum());
+        } else {
+            account.setBalance(agreement.getSum());
+        }
+        account.setUpdatedAt(LocalDateTime.now());
         account.setStatus(Status.ACTIVE);
 
         accountRepository.save(account);
@@ -82,30 +92,33 @@ public class AgreementServiceImpl implements AgreementService {
 
     @Transactional
     @Override
-    public void blockAgreementByManager(AgreementDto agreementDto) {
-        Agreement agreement = getAndUpdateAgreement(agreementDto);
+    public void blockAgreementByManager(Long agreementId) {
+        Agreement agreement = getAndUpdateAgreement(agreementId);
         agreement.setStatus(Status.BLOCKED);
-        Account account = getAndUpdateAccount(agreementDto, agreement);
+
+        Account account = agreement.getAccount();
+        account.setUpdatedAt(LocalDateTime.now());
         account.setStatus(Status.BLOCKED);
 
         accountRepository.save(account);
     }
 
-    private Agreement getAndUpdateAgreement(AgreementDto agreementDto) {
-        long agreementId = agreementDto.getId();
-        Agreement agreement = agreementRepository.findById(agreementId)
-                .orElseThrow(() -> new AgreementNotFoundException("Agreement not found with id = " + agreementId));
+    @Transactional
+    @Override
+    public AgreementDto getAgreementDtoById(Long id) {
+        return agreementMapper.mapToDto(findById(id));
+    }
+
+    private Agreement getAndUpdateAgreement(Long agreementId) {
+        Agreement agreement = findById(agreementId);
         agreement.setManager(userProvider.getCurrentUser());
         agreement.setUpdatedAt(LocalDateTime.now());
         return agreement;
     }
 
-    private static Account getAndUpdateAccount(AgreementDto agreementDto, Agreement agreement) {
-        Account account = agreement.getAccount();
-        account.setBalance(BigDecimal.valueOf(agreementDto.getSum()));
-        account.setCurrencyCode(CurrencyCode.valueOf(agreementDto.getCurrencyCode().toUpperCase()));
-        account.setUpdatedAt(LocalDateTime.now());
-        return account;
+    private Agreement findById(Long id) {
+        return agreementRepository.findById(id)
+                .orElseThrow(() -> new AgreementNotFoundException("Agreement not found with id = " + id));
     }
 
 

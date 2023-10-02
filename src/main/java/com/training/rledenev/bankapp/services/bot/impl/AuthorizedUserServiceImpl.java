@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static com.training.rledenev.bankapp.services.bot.impl.BotUtils.*;
+import static com.training.rledenev.bankapp.services.bot.util.BotUtils.*;
 
 @Service
 public class AuthorizedUserServiceImpl implements AuthorizedUserService {
@@ -64,7 +64,7 @@ public class AuthorizedUserServiceImpl implements AuthorizedUserService {
             if (message.equals(BACK)) {
                 CHAT_ID_ACTION_NAME_MAP.remove(chatId);
                 ProductMessageHandlerService.CHAT_ID_AGREEMENT_DTO_MAP.remove(chatId);
-                AgreementMessageHandlerService.CHAT_ID_AGREEMENT_DTO_MAP.remove(chatId);
+                AgreementMessageHandlerService.CHAT_ID_AGREEMENT_ID_MAP.remove(chatId);
                 AccountsMessageHandlerService.CHAT_ID_ACCOUNT_DTO_MAP.remove(chatId);
                 TransactionMessageHandlerServiceImpl.CHAT_ID_TRANSACTION_DTO_MAP.remove(chatId);
                 return createSendMessageWithButtons(chatId, SELECT_ACTION, getListOfActionsByUserRole(userRole));
@@ -80,7 +80,7 @@ public class AuthorizedUserServiceImpl implements AuthorizedUserService {
         } else {
             UpdateHandlerServiceImpl.CHAT_ID_TOKEN_MAP.remove(chatId);
             ProductMessageHandlerService.CHAT_ID_AGREEMENT_DTO_MAP.remove(chatId);
-            AgreementMessageHandlerService.CHAT_ID_AGREEMENT_DTO_MAP.remove(chatId);
+            AgreementMessageHandlerService.CHAT_ID_AGREEMENT_ID_MAP.remove(chatId);
             AccountsMessageHandlerService.CHAT_ID_ACCOUNT_DTO_MAP.remove(chatId);
             TransactionMessageHandlerServiceImpl.CHAT_ID_TRANSACTION_DTO_MAP.remove(chatId);
             return createSendMessageWithButtons(chatId, SESSION_CLOSED, List.of(REGISTER_USER, LOG_IN));

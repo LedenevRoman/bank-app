@@ -9,7 +9,9 @@ public interface AgreementService {
 
     List<AgreementDto> getAgreementsForManager();
 
-    void confirmAgreementByManager(AgreementDto agreementDto);
+    void confirmAgreementByManager(Long agreementId);
 
-    void blockAgreementByManager(AgreementDto agreementDto);
+    void blockAgreementByManager(Long agreementId);
+
+    AgreementDto getAgreementDtoById(Long id);
 }

@@ -5,6 +5,7 @@ import com.training.rledenev.bankapp.exceptions.AuthenticationException;
 import com.training.rledenev.bankapp.security.jwt.JwtProvider;
 import com.training.rledenev.bankapp.services.UserService;
 import com.training.rledenev.bankapp.services.bot.LogInUserService;
+import com.training.rledenev.bankapp.services.bot.util.BotUtils;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
@@ -12,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static com.training.rledenev.bankapp.services.bot.impl.BotUtils.*;
+import static com.training.rledenev.bankapp.services.bot.util.BotUtils.*;
 
 @Service
 public class LogInUserServiceImpl implements LogInUserService {

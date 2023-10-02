@@ -8,6 +8,7 @@ import com.training.rledenev.bankapp.services.bot.action.impl.AccountsMessageHan
 import com.training.rledenev.bankapp.services.bot.action.impl.AgreementMessageHandlerService;
 import com.training.rledenev.bankapp.services.bot.action.impl.ProductMessageHandlerService;
 import com.training.rledenev.bankapp.services.bot.action.impl.transaction.impl.TransactionMessageHandlerServiceImpl;
+import com.training.rledenev.bankapp.services.bot.util.BotUtils;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -16,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static com.training.rledenev.bankapp.services.bot.impl.BotUtils.*;
+import static com.training.rledenev.bankapp.services.bot.util.BotUtils.*;
 
 @Service
 public class UpdateHandlerServiceImpl implements UpdateHandlerService {
@@ -43,7 +44,7 @@ public class UpdateHandlerServiceImpl implements UpdateHandlerService {
                 CHAT_ID_TOKEN_MAP.remove(chatId);
                 AuthorizedUserServiceImpl.CHAT_ID_ACTION_NAME_MAP.remove(chatId);
                 ProductMessageHandlerService.CHAT_ID_AGREEMENT_DTO_MAP.remove(chatId);
-                AgreementMessageHandlerService.CHAT_ID_AGREEMENT_DTO_MAP.remove(chatId);
+                AgreementMessageHandlerService.CHAT_ID_AGREEMENT_ID_MAP.remove(chatId);
                 AccountsMessageHandlerService.CHAT_ID_ACCOUNT_DTO_MAP.remove(chatId);
                 TransactionMessageHandlerServiceImpl.CHAT_ID_TRANSACTION_DTO_MAP.remove(chatId);
             }

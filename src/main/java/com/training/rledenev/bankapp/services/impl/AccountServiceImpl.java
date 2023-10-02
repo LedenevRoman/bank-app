@@ -15,6 +15,7 @@ import java.util.List;
 
 @Service
 public class AccountServiceImpl implements AccountService {
+    private static final String MAIN_BANK_ACCOUNT_NUMBER = "1111111111111111";
     private final AccountMapper accountMapper;
     private final AccountRepository accountRepository;
     private final UserProvider userProvider;
@@ -46,8 +47,9 @@ public class AccountServiceImpl implements AccountService {
                 .orElseThrow(() -> new AccountNotFoundException("Account not found with number " + accountNumber));
     }
 
+    @Transactional
     @Override
-    public void deleteAccount(Long id) {
-        accountRepository.deleteById(id);
+    public Account getMainBankAccount() {
+        return getAccountByNumber(MAIN_BANK_ACCOUNT_NUMBER);
     }
 }

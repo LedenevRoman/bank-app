@@ -6,10 +6,11 @@ import com.training.rledenev.bankapp.entity.enums.ProductType;
 import com.training.rledenev.bankapp.entity.enums.Role;
 import com.training.rledenev.bankapp.exceptions.ProductNotFoundException;
 import com.training.rledenev.bankapp.services.AgreementService;
+import com.training.rledenev.bankapp.services.CurrencyService;
 import com.training.rledenev.bankapp.services.ProductService;
 import com.training.rledenev.bankapp.services.bot.action.ActionMessageHandlerService;
 import com.training.rledenev.bankapp.services.bot.impl.AuthorizedUserServiceImpl;
-import com.training.rledenev.bankapp.services.bot.impl.BotUtils;
+import com.training.rledenev.bankapp.services.bot.util.BotUtils;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
@@ -20,17 +21,19 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
-import static com.training.rledenev.bankapp.services.bot.impl.BotUtils.*;
+import static com.training.rledenev.bankapp.services.bot.util.BotUtils.*;
 
 @Service
 public class ProductMessageHandlerService implements ActionMessageHandlerService {
     public static final Map<Long, AgreementDto> CHAT_ID_AGREEMENT_DTO_MAP = new ConcurrentHashMap<>();
     private final AgreementService agreementService;
     private final ProductService productService;
+    private final CurrencyService currencyService;
 
-    public ProductMessageHandlerService(AgreementService agreementService, ProductService productService) {
+    public ProductMessageHandlerService(AgreementService agreementService, ProductService productService, CurrencyService currencyService) {
         this.agreementService = agreementService;
         this.productService = productService;
+        this.currencyService = currencyService;
     }
 
     @Override
@@ -65,7 +68,7 @@ public class ProductMessageHandlerService implements ActionMessageHandlerService
                         || agreementDto.getProductType().equals(ProductType.CREDIT_CARD.getName())) {
                     ProductDto productDto = productService.getSuitableProduct(agreementDto);
                     BigDecimal amount = BigDecimal.valueOf(productDto.getMinLimit())
-                            .divide(productService.getRateOfCurrency(agreementDto.getCurrencyCode()), 2,
+                            .divide(currencyService.getRateOfCurrency(agreementDto.getCurrencyCode()), 2,
                                     RoundingMode.HALF_UP);
                     agreementDto.setPeriodMonths(productDto.getPeriodMonths());
                     agreementDto.setSum(amount.doubleValue());

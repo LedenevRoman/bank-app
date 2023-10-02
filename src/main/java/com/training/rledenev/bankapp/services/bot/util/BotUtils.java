@@ -1,4 +1,4 @@
-package com.training.rledenev.bankapp.services.bot.impl;
+package com.training.rledenev.bankapp.services.bot.util;
 
 import com.training.rledenev.bankapp.entity.enums.CurrencyCode;
 import com.training.rledenev.bankapp.entity.enums.Role;
@@ -94,9 +94,9 @@ public final class BotUtils {
     public static final String SELECT_AGREEMENT_ID = "Please, select agreement id to approve:";
     public static final String WRONG_AGREEMENT_ID = "Wrong agreement id number." + "\n"
             + SELECT_AGREEMENT_ID;
-    public static final String AGREEMENT_CONFIRMED = "Agreement with id %d was confirmed." + "\n" + "\n";
-
-    public static final String AGREEMENT_BLOCKED = "Agreement with id %d was blocked." + "\n"
+    public static final String AGREEMENT_CONFIRMED = "Agreement with id %d was confirmed." + "\n" + "\n"
+            + SELECT_AGREEMENT_ID;
+    public static final String AGREEMENT_BLOCKED = "Agreement with id %d was blocked." + "\n" + "\n"
             + SELECT_AGREEMENT_ID;
     public static final String PRODUCTS_LIST_MESSAGE = "Here is a list of available types of products:" + "\n";
     public static final String PRODUCTS_LIST_OF_TYPE = "Here is a list of products of type %s:" + "\n";
@@ -198,7 +198,7 @@ public final class BotUtils {
                 .collect(Collectors.toList());
     }
 
-    public static List<String> getApproveDeclineButtons() {
+    public static List<String> getConfirmBlockButtons() {
         return List.of(CONFIRM, BLOCK, BACK);
     }
 

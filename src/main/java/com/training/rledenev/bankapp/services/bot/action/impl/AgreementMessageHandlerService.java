@@ -13,11 +13,11 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
-import static com.training.rledenev.bankapp.services.bot.impl.BotUtils.*;
+import static com.training.rledenev.bankapp.services.bot.util.BotUtils.*;
 
 @Service
 public class AgreementMessageHandlerService implements ActionMessageHandlerService {
-    public static final Map<Long, AgreementDto> CHAT_ID_AGREEMENT_DTO_MAP = new ConcurrentHashMap<>();
+    public static final Map<Long, Long> CHAT_ID_AGREEMENT_ID_MAP = new ConcurrentHashMap<>();
     private final AgreementService agreementService;
 
     public AgreementMessageHandlerService(AgreementService agreementService) {
@@ -30,52 +30,57 @@ public class AgreementMessageHandlerService implements ActionMessageHandlerServi
             return createSendMessageWithButtons(chatId, ACCESS_DENIED, getListOfActionsByUserRole(role));
         }
         List<AgreementDto> agreementDtos = agreementService.getAgreementsForManager();
-        if (CHAT_ID_AGREEMENT_DTO_MAP.get(chatId) == null) {
+        final Long agreementId;
+        if (CHAT_ID_AGREEMENT_ID_MAP.get(chatId) == null) {
             if (message.equals(NEW_AGREEMENTS)) {
-                return createSendMessageWithButtons(chatId, getNewAgreementsMessage(agreementDtos),
+                return createSendMessageWithButtons(chatId, getListNewAgreementsMessage(agreementDtos),
                         getListOfAgreementsIdButtons(agreementDtos));
             }
-            long agreementId;
             try {
                 agreementId = Long.parseLong(message);
             } catch (NumberFormatException exception) {
                 return createSendMessageWithButtons(chatId, INCORRECT_NUMBER_INT,
                         getListOfAgreementsIdButtons(agreementDtos));
             }
-            Optional<AgreementDto> optionalAgreementDto = agreementDtos.stream()
-                    .filter(a -> a.getId().equals(agreementId))
-                    .findFirst();
+            Optional<AgreementDto> optionalAgreementDto = getOptionalFromListById(agreementDtos, agreementId);
             if (optionalAgreementDto.isPresent()) {
                 AgreementDto agreementDto = optionalAgreementDto.get();
-                CHAT_ID_AGREEMENT_DTO_MAP.put(chatId, agreementDto);
+                CHAT_ID_AGREEMENT_ID_MAP.put(chatId, agreementId);
                 return createSendMessageWithButtons(chatId, getSelectedAgreementMessage(agreementDto),
-                        getApproveDeclineButtons());
+                        getConfirmBlockButtons());
             } else {
                 return createSendMessageWithButtons(chatId, WRONG_AGREEMENT_ID,
                         getListOfAgreementsIdButtons(agreementDtos));
             }
         } else {
-            AgreementDto agreementDto = CHAT_ID_AGREEMENT_DTO_MAP.get(chatId);
-            agreementDtos.remove(agreementDto);
-            CHAT_ID_AGREEMENT_DTO_MAP.remove(chatId);
+            agreementId = CHAT_ID_AGREEMENT_ID_MAP.get(chatId);
+            agreementDtos.removeIf(a -> a.getId().equals(agreementId));
+            CHAT_ID_AGREEMENT_ID_MAP.remove(chatId);
             if (message.equals(CONFIRM)) {
-                agreementService.confirmAgreementByManager(agreementDto);
+                agreementService.confirmAgreementByManager(agreementId);
                 return createSendMessageWithButtons(chatId,
-                        getCustomMessage(AGREEMENT_CONFIRMED, agreementDtos, agreementDto),
+                        getStatusMessageWithListAgreements(AGREEMENT_CONFIRMED, agreementDtos, agreementId),
                         getListOfAgreementsIdButtons(agreementDtos));
             }
             if (message.equals(BLOCK)) {
-                agreementService.blockAgreementByManager(agreementDto);
+                agreementService.blockAgreementByManager(agreementId);
                 return createSendMessageWithButtons(chatId,
-                        getCustomMessage(AGREEMENT_BLOCKED, agreementDtos, agreementDto),
+                        getStatusMessageWithListAgreements(AGREEMENT_BLOCKED, agreementDtos, agreementId),
                         getListOfAgreementsIdButtons(agreementDtos));
             }
         }
         return createSendMessageWithButtons(chatId, UNKNOWN_INPUT_MESSAGE, List.of(EXIT));
     }
 
-    private String getCustomMessage(String message, List<AgreementDto> agreementDtos, AgreementDto agreementDto) {
-        return String.format(message + getNewAgreementsMessage(agreementDtos), agreementDto.getId());
+    private static Optional<AgreementDto> getOptionalFromListById(List<AgreementDto> agreementDtos, long agreementId) {
+        return agreementDtos.stream()
+                .filter(a -> a.getId().equals(agreementId))
+                .findFirst();
+    }
+
+    private String getStatusMessageWithListAgreements(String message, List<AgreementDto> agreementDtos,
+                                                      Long agreementId) {
+        return String.format(message + getListNewAgreementsMessage(agreementDtos), agreementId);
     }
 
     private String getSelectedAgreementMessage(AgreementDto agreementDto) {
@@ -91,7 +96,7 @@ public class AgreementMessageHandlerService implements ActionMessageHandlerServi
         return buttons;
     }
 
-    private String getNewAgreementsMessage(List<AgreementDto> agreementDtos) {
+    private String getListNewAgreementsMessage(List<AgreementDto> agreementDtos) {
         StringBuilder stringBuilder = new StringBuilder(NEW_AGREEMENTS_LIST);
         for (AgreementDto agreementDto : agreementDtos) {
             stringBuilder.append(String.format(AGREEMENT_INFO, agreementDto.getId(), agreementDto.getProductName(),

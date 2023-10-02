@@ -13,5 +13,5 @@ public interface AccountService {
 
     Account getAccountByNumber(String accountNumber);
 
-    void deleteAccount(Long id);
+    Account getMainBankAccount();
 }
