@@ -25,12 +25,8 @@ public class CurrencyRatesHandlerService implements ActionMessageHandlerService 
 
     @Override
     public SendMessage handleMessage(long chatId, String message, Role role) {
-        List<String> currenciesWithoutDefaultCurrency = Arrays.stream(CurrencyCode.values())
-                .skip(1)
-                .map(Enum::toString)
-                .collect(Collectors.toList());
-        List<String> currencyButtons = new ArrayList<>(currenciesWithoutDefaultCurrency);
-        currencyButtons.add(BACK);
+        List<String> currenciesWithoutDefaultCurrency = getAllCurrencies();
+        List<String> currencyButtons = getCurrencyButtons(currenciesWithoutDefaultCurrency);
         if (message.equals(CURRENCY_RATES)) {
             return createSendMessageWithButtons(chatId, SELECT_CURRENCY, currencyButtons);
         }
@@ -42,5 +38,18 @@ public class CurrencyRatesHandlerService implements ActionMessageHandlerService 
                     date, date, date, rate, message), currencyButtons);
         }
         return createSendMessageWithButtons(chatId, UNKNOWN_CURRENCY_CODE, currencyButtons);
+    }
+
+    private static List<String> getAllCurrencies() {
+        return Arrays.stream(CurrencyCode.values())
+                .skip(1)
+                .map(Enum::toString)
+                .collect(Collectors.toList());
+    }
+
+    private List<String> getCurrencyButtons(List<String> currenciesWithoutDefaultCurrency) {
+        List<String> currencyButtons = new ArrayList<>(currenciesWithoutDefaultCurrency);
+        currencyButtons.add(BACK);
+        return currencyButtons;
     }
 }

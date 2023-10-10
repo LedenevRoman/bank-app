@@ -3,6 +3,7 @@ package com.training.rledenev.bankapp.services.bot.impl;
 import com.training.rledenev.bankapp.dto.UserDto;
 import com.training.rledenev.bankapp.services.UserService;
 import com.training.rledenev.bankapp.services.bot.RegistrationUserService;
+import com.training.rledenev.bankapp.services.bot.chatmaps.ChatIdInRegistrationMap;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -103,7 +104,7 @@ public class RegistrationUserServiceImpl implements RegistrationUserService {
             userDto.setPassword(messageText);
             userService.saveNewClient(userDto);
             CHAT_ID_USER_DTO_MAP.remove(chatId, userDto);
-            UpdateHandlerServiceImpl.CHAT_ID_IS_IN_REGISTRATION_MAP.put(chatId, false);
+            ChatIdInRegistrationMap.put(chatId, false);
             return createSendMessageWithButtons(chatId, REGISTRATION_COMPLETED, List.of(REGISTER_USER, LOG_IN));
         } else {
             return createSendMessage(chatId, INCORRECT_PASSWORD);

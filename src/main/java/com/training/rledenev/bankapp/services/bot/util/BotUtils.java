@@ -3,6 +3,7 @@ package com.training.rledenev.bankapp.services.bot.util;
 import com.training.rledenev.bankapp.entity.enums.CurrencyCode;
 import com.training.rledenev.bankapp.entity.enums.Role;
 import com.training.rledenev.bankapp.entity.enums.TransactionType;
+import com.training.rledenev.bankapp.services.bot.chatmaps.*;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
@@ -133,6 +134,14 @@ public final class BotUtils {
 
 
     private BotUtils() {
+    }
+
+    public static void removeIdFromMaps(long chatId) {
+        ChatIdActionNameMap.remove(chatId);
+        ChatIdAgreementDtoMap.remove(chatId);
+        ChatIdAgreementIdMap.remove(chatId);
+        ChatIdAccountDtoMap.remove(chatId);
+        ChatIdTransactionDtoMap.remove(chatId);
     }
 
     public static SendMessage createSendMessage(Long chatId, String textToSend) {

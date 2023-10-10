@@ -1,15 +1,15 @@
 INSERT INTO users (role, status, password, first_name, last_name, email, address, phone, created_at, updated_at)
 VALUES
-    ('CLIENT', 'ACTIVE', '$2a$04$pqlgizIi1uE4Tb9BxRT3D.qonNfBIXxCDiq.r2tL5vqQKNGQ25IE6', 'Isabella', 'White', 'isabella.white@yopmail.com ', '789 Elm St', '777-8888', '2023-09-01 13:57:40', '2023-09-01 13:57:40'),
-    ('CLIENT', 'ACTIVE', '$2a$04$pqlgizIi1uE4Tb9BxRT3D.qonNfBIXxCDiq.r2tL5vqQKNGQ25IE6', 'James', 'Harris', 'james.harris@yopmail.com ', '987 Main St', '333-1111', '2023-08-01 13:57:40', '2023-08-01 13:57:40'),
-    ('MANAGER', 'ACTIVE', '$2a$04$pqlgizIi1uE4Tb9BxRT3D.qonNfBIXxCDiq.r2tL5vqQKNGQ25IE6', 'Mia', 'Clark', 'mia.clark@yopmail.com ', '654 Elm St', '999-0000', '2023-08-02 13:57:40', '2023-09-01 13:57:40'),
-    ('CLIENT', 'ACTIVE', '$2a$04$pqlgizIi1uE4Tb9BxRT3D.qonNfBIXxCDiq.r2tL5vqQKNGQ25IE6', 'Joseph', 'Lewis', 'joseph.lewis@yopmail.com ', '123 Main St', '246-1357', '2023-08-09 13:57:40', '2023-09-01 13:57:40'),
-    ('CLIENT', 'ACTIVE', '$2a$04$pqlgizIi1uE4Tb9BxRT3D.qonNfBIXxCDiq.r2tL5vqQKNGQ25IE6', 'Charlotte', 'Lee', 'charlotte.lee@yopmail.com ', '321 Pine St', '864-2093', '2023-08-07 13:57:40', '2023-09-01 13:57:40'),
-    ('MANAGER', 'ACTIVE', '$2a$04$pqlgizIi1uE4Tb9BxRT3D.qonNfBIXxCDiq.r2tL5vqQKNGQ25IE6', 'David', 'Walker', 'david.walker@yopmail.com ', '987 Maple St', '502-8174', '2023-08-06 13:57:40', '2023-09-01 13:57:40'),
-    ('CLIENT', 'ACTIVE', '$2a$04$pqlgizIi1uE4Tb9BxRT3D.qonNfBIXxCDiq.r2tL5vqQKNGQ25IE6', 'Abigail', 'Hall', 'abigail.hall@yopmail.com ', '654 Oak St', '619-3847', '2023-08-05 13:57:40', '2023-08-01 13:57:40'),
-    ('CLIENT', 'ACTIVE', '$2a$04$pqlgizIi1uE4Tb9BxRT3D.qonNfBIXxCDiq.r2tL5vqQKNGQ25IE6', 'Christopher', 'Wright', 'christopher.wright@yopmail.com ', '789 Elm St', '205-6789', '2023-08-04 13:57:40', '2023-09-01 13:57:40'),
-    ('CLIENT', 'ACTIVE', '$2a$04$pqlgizIi1uE4Tb9BxRT3D.qonNfBIXxCDiq.r2tL5vqQKNGQ25IE6', 'Harper', 'Young', 'harper.young@yopmail.com ', '321 Oak St', '714-2938', '2023-08-03 13:57:40', '2023-09-01 13:57:40'),
-    ('MANAGER', 'ACTIVE', '$2a$04$pqlgizIi1uE4Tb9BxRT3D.qonNfBIXxCDiq.r2tL5vqQKNGQ25IE6', 'Andrew', 'Allen', 'andrew.allen@yopmail.com ', '456 Maple St', '408-5726', '2023-08-10 13:57:40', '2023-08-10 13:57:40');
+    ('CLIENT', 'ACTIVE', '$2a$04$pqlgizIi1uE4Tb9BxRT3D.qonNfBIXxCDiq.r2tL5vqQKNGQ25IE6', 'Isabella', 'White', 'isabella.white@yopmail.com', '789 Elm St', '777-8888', '2023-09-01 13:57:40', '2023-09-01 13:57:40'),
+    ('CLIENT', 'ACTIVE', '$2a$04$pqlgizIi1uE4Tb9BxRT3D.qonNfBIXxCDiq.r2tL5vqQKNGQ25IE6', 'James', 'Harris', 'james.harris@yopmail.com', '987 Main St', '333-1111', '2023-08-01 13:57:40', '2023-08-01 13:57:40'),
+    ('MANAGER', 'ACTIVE', '$2a$04$pqlgizIi1uE4Tb9BxRT3D.qonNfBIXxCDiq.r2tL5vqQKNGQ25IE6', 'Mia', 'Clark', 'mia.clark@yopmail.com', '654 Elm St', '999-0000', '2023-08-02 13:57:40', '2023-09-01 13:57:40'),
+    ('CLIENT', 'ACTIVE', '$2a$04$pqlgizIi1uE4Tb9BxRT3D.qonNfBIXxCDiq.r2tL5vqQKNGQ25IE6', 'Joseph', 'Lewis', 'joseph.lewis@yopmail.com', '123 Main St', '246-1357', '2023-08-09 13:57:40', '2023-09-01 13:57:40'),
+    ('CLIENT', 'ACTIVE', '$2a$04$pqlgizIi1uE4Tb9BxRT3D.qonNfBIXxCDiq.r2tL5vqQKNGQ25IE6', 'Charlotte', 'Lee', 'charlotte.lee@yopmail.com', '321 Pine St', '864-2093', '2023-08-07 13:57:40', '2023-09-01 13:57:40'),
+    ('MANAGER', 'ACTIVE', '$2a$04$pqlgizIi1uE4Tb9BxRT3D.qonNfBIXxCDiq.r2tL5vqQKNGQ25IE6', 'David', 'Walker', 'david.walker@yopmail.com', '987 Maple St', '502-8174', '2023-08-06 13:57:40', '2023-09-01 13:57:40'),
+    ('CLIENT', 'ACTIVE', '$2a$04$pqlgizIi1uE4Tb9BxRT3D.qonNfBIXxCDiq.r2tL5vqQKNGQ25IE6', 'Abigail', 'Hall', 'abigail.hall@yopmail.com', '654 Oak St', '619-3847', '2023-08-05 13:57:40', '2023-08-01 13:57:40'),
+    ('CLIENT', 'ACTIVE', '$2a$04$pqlgizIi1uE4Tb9BxRT3D.qonNfBIXxCDiq.r2tL5vqQKNGQ25IE6', 'Christopher', 'Wright', 'christopher.wright@yopmail.com', '789 Elm St', '205-6789', '2023-08-04 13:57:40', '2023-09-01 13:57:40'),
+    ('CLIENT', 'ACTIVE', '$2a$04$pqlgizIi1uE4Tb9BxRT3D.qonNfBIXxCDiq.r2tL5vqQKNGQ25IE6', 'Harper', 'Young', 'harper.young@yopmail.com', '321 Oak St', '714-2938', '2023-08-03 13:57:40', '2023-09-01 13:57:40'),
+    ('MANAGER', 'ACTIVE', '$2a$04$pqlgizIi1uE4Tb9BxRT3D.qonNfBIXxCDiq.r2tL5vqQKNGQ25IE6', 'Andrew', 'Allen', 'andrew.allen@yopmail.com', '456 Maple St', '408-5726', '2023-08-10 13:57:40', '2023-08-10 13:57:40');
 
 INSERT INTO products (name, type, status, interest_rate, min_limit, period_months, created_at, updated_at)
 VALUES
@@ -49,15 +49,14 @@ VALUES
 INSERT INTO agreements (account_id, product_id, manager_id, status, sum, period_months, start_date, created_at, updated_at)
 VALUES
     (2, 2, 3, 'ACTIVE', 10000, 12, '2023-09-03', '2023-09-03 12:00:00', '2023-09-03 12:00:00'),
-    (2, 1, 6,'ACTIVE', 90000, 12, '2023-09-03', '2023-09-03 12:00:00', '2023-09-03 12:00:00'),
-    (3, 3, 10, 'ACTIVE', 11000, 12, '2023-09-03', '2023-09-03 12:00:00', '2023-09-03 12:00:00'),
-    (4, 2, 3, 'ACTIVE', 15000, 12, '2023-09-03', '2023-09-03 12:00:00', '2023-09-03 12:00:00'),
-    (5, 1, 6, 'ACTIVE', 8000, 12, '2023-09-03', '2023-09-03 12:00:00', '2023-09-03 12:00:00'),
-    (6, 3, 10, 'ACTIVE', 13000, 12, '2023-09-03', '2023-09-03 12:00:00', '2023-09-03 12:00:00'),
-    (7, 2, 3, 'ACTIVE', 12000, 12, '2023-09-03', '2023-09-03 12:00:00', '2023-09-03 12:00:00'),
-    (8, 1, 6,  'ACTIVE', 7000, 12, '2023-09-03', '2023-09-03 12:00:00', '2023-09-03 12:00:00'),
-    (9, 3, 10,  'ACTIVE', 14000, 12, '2023-09-03', '2023-09-03 12:00:00', '2023-09-03 12:00:00'),
-    (10, 2, 3,  'ACTIVE', 6000, 12, '2023-09-03', '2023-09-03 12:00:00', '2023-09-03 12:00:00'),
+    (3, 1, 6,'ACTIVE', 90000, 12, '2023-09-03', '2023-09-03 12:00:00', '2023-09-03 12:00:00'),
+    (4, 3, 10, 'ACTIVE', 11000, 12, '2023-09-03', '2023-09-03 12:00:00', '2023-09-03 12:00:00'),
+    (5, 2, 3, 'ACTIVE', 15000, 12, '2023-09-03', '2023-09-03 12:00:00', '2023-09-03 12:00:00'),
+    (6, 1, 6, 'ACTIVE', 8000, 12, '2023-09-03', '2023-09-03 12:00:00', '2023-09-03 12:00:00'),
+    (7, 3, 10, 'ACTIVE', 13000, 12, '2023-09-03', '2023-09-03 12:00:00', '2023-09-03 12:00:00'),
+    (8, 2, 3, 'ACTIVE', 12000, 12, '2023-09-03', '2023-09-03 12:00:00', '2023-09-03 12:00:00'),
+    (9, 1, 6,  'ACTIVE', 7000, 12, '2023-09-03', '2023-09-03 12:00:00', '2023-09-03 12:00:00'),
+    (10, 3, 10,  'ACTIVE', 14000, 12, '2023-09-03', '2023-09-03 12:00:00', '2023-09-03 12:00:00'),
     (11, 1, 6,  'ACTIVE', 5000, 12, '2023-09-03', '2023-09-03 12:00:00', '2023-09-03 12:00:00');
 
 INSERT INTO transactions (debit_account_id, credit_account_id, type, amount, currency_code, debit_balance_difference, credit_balance_difference, description, created_at)

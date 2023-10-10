@@ -4,20 +4,18 @@ import com.training.rledenev.bankapp.dto.AgreementDto;
 import com.training.rledenev.bankapp.entity.enums.Role;
 import com.training.rledenev.bankapp.services.AgreementService;
 import com.training.rledenev.bankapp.services.bot.action.ActionMessageHandlerService;
+import com.training.rledenev.bankapp.services.bot.chatmaps.ChatIdAgreementIdMap;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import static com.training.rledenev.bankapp.services.bot.util.BotUtils.*;
 
 @Service
 public class AgreementMessageHandlerService implements ActionMessageHandlerService {
-    public static final Map<Long, Long> CHAT_ID_AGREEMENT_ID_MAP = new ConcurrentHashMap<>();
     private final AgreementService agreementService;
 
     public AgreementMessageHandlerService(AgreementService agreementService) {
@@ -31,7 +29,7 @@ public class AgreementMessageHandlerService implements ActionMessageHandlerServi
         }
         List<AgreementDto> agreementDtos = agreementService.getAgreementsForManager();
         final Long agreementId;
-        if (CHAT_ID_AGREEMENT_ID_MAP.get(chatId) == null) {
+        if (ChatIdAgreementIdMap.get(chatId) == null) {
             if (message.equals(NEW_AGREEMENTS)) {
                 return createSendMessageWithButtons(chatId, getListNewAgreementsMessage(agreementDtos),
                         getListOfAgreementsIdButtons(agreementDtos));
@@ -45,7 +43,7 @@ public class AgreementMessageHandlerService implements ActionMessageHandlerServi
             Optional<AgreementDto> optionalAgreementDto = getOptionalFromListById(agreementDtos, agreementId);
             if (optionalAgreementDto.isPresent()) {
                 AgreementDto agreementDto = optionalAgreementDto.get();
-                CHAT_ID_AGREEMENT_ID_MAP.put(chatId, agreementId);
+                ChatIdAgreementIdMap.put(chatId, agreementId);
                 return createSendMessageWithButtons(chatId, getSelectedAgreementMessage(agreementDto),
                         getConfirmBlockButtons());
             } else {
@@ -53,9 +51,9 @@ public class AgreementMessageHandlerService implements ActionMessageHandlerServi
                         getListOfAgreementsIdButtons(agreementDtos));
             }
         } else {
-            agreementId = CHAT_ID_AGREEMENT_ID_MAP.get(chatId);
+            agreementId = ChatIdAgreementIdMap.get(chatId);
             agreementDtos.removeIf(a -> a.getId().equals(agreementId));
-            CHAT_ID_AGREEMENT_ID_MAP.remove(chatId);
+            ChatIdAgreementIdMap.remove(chatId);
             if (message.equals(CONFIRM)) {
                 agreementService.confirmAgreementByManager(agreementId);
                 return createSendMessageWithButtons(chatId,

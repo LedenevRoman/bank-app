@@ -5,6 +5,8 @@ import com.training.rledenev.bankapp.exceptions.AuthenticationException;
 import com.training.rledenev.bankapp.security.jwt.JwtProvider;
 import com.training.rledenev.bankapp.services.UserService;
 import com.training.rledenev.bankapp.services.bot.LogInUserService;
+import com.training.rledenev.bankapp.services.bot.chatmaps.ChatIdInLoginMap;
+import com.training.rledenev.bankapp.services.bot.chatmaps.ChatIdSecurityTokenMap;
 import com.training.rledenev.bankapp.services.bot.util.BotUtils;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -36,10 +38,10 @@ public class LogInUserServiceImpl implements LogInUserService {
                 return BotUtils.createSendMessageWithButtons(chatId, AUTHENTICATION_FAILED, List.of(REGISTER_USER, LOG_IN));
             } finally {
                 CHAT_ID_EMAIL_MAP.remove(chatId);
-                UpdateHandlerServiceImpl.CHAT_ID_IS_IN_LOGIN_MAP.put(chatId, false);
+                ChatIdInLoginMap.put(chatId, false);
             }
             String token = jwtProvider.generateToken(user.getEmail());
-            UpdateHandlerServiceImpl.CHAT_ID_TOKEN_MAP.put(chatId, token);
+            ChatIdSecurityTokenMap.put(chatId, token);
             return BotUtils.createSendMessageWithButtons(chatId, String.format(AUTHENTICATION_COMPLETED,
                     user.getFirstName(), user.getLastName()) + SELECT_ACTION, getListOfActionsByUserRole(user.getRole()));
         } else {
