@@ -11,6 +11,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt</artifactId>
             <version>${jjwt.version}</version>
@@ -82,13 +87,12 @@
                 </executions>
                 <configuration>
                     <excludes>
-                        <exclude>com/**/bot/*</exclude>
+                        <exclude>com/**/aspect/*</exclude>
                         <exclude>com/**/config/*</exclude>
                         <exclude>com/**/dto/*</exclude>
                         <exclude>com/**/entity/**</exclude>
                         <exclude>com/**/security/**</exclude>
-                        <exclude>com/**/services/bot/**</exclude>
-                        <exclude>com/**/BankAppApplication.class</exclude>
+                        <exclude>com/**/exceptions/*</exclude>
                     </excludes>
                     <destFile>${project.build.directory}/jacoco.exec</destFile>
                 </configuration>

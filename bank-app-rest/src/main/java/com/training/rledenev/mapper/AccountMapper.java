@@ -50,6 +50,9 @@ public interface AccountMapper {
 
     @Named("getPaymentTermFromAgreement")
     default LocalDate getPaymentTermFromAgreement(Agreement agreement) {
+        if (agreement.getStartDate() == null) {
+            return null;
+        }
         LocalDate startDate = agreement.getStartDate();
         int periodMonth = agreement.getProduct().getPeriodMonths();
         return startDate.plusMonths(periodMonth);

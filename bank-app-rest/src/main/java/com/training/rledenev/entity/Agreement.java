@@ -39,7 +39,6 @@ public class Agreement {
     @Column(name = "sum")
     private BigDecimal sum;
 
-
     @Column(name = "start_date")
     private LocalDate startDate;
 

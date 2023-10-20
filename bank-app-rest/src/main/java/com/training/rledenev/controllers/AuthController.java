@@ -23,8 +23,7 @@ public class AuthController {
     public ResponseEntity<SecurityToken> auth(@Valid @RequestBody UserDto userDto) {
         User user = userService.findByEmailAndPassword(userDto.getEmail(), userDto.getPassword());
         String tokenString = jwtProvider.generateToken(user.getEmail());
-        SecurityToken tokenEntity = new SecurityToken(tokenString);
-        return ResponseEntity.ok().body(tokenEntity);
+        return ResponseEntity.ok().body(new SecurityToken(tokenString));
     }
 
     @GetMapping

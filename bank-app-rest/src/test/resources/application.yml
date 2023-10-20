@@ -8,7 +8,6 @@ spring:
     hibernate:
       ddl-auto: none
   flyway:
-    create-schemas: false
     enabled: false
   sql:
     init:

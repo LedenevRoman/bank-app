@@ -30,14 +30,12 @@ public class AgreementController {
     }
 
     @PutMapping("/confirm/{id}")
-    @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<Void> confirmAgreement(@PathVariable(name = "id") Long id) {
         agreementService.confirmAgreementByManager(id);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/block/{id}")
-    @PreAuthorize("hasRole('MANAGER')")
     public ResponseEntity<Void> blockAgreement(@PathVariable(name = "id") Long id) {
         agreementService.blockAgreementByManager(id);
         return ResponseEntity.ok().build();

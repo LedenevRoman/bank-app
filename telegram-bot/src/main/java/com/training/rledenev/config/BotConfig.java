@@ -1,4 +1,4 @@
-package com.training.rledenev.services.bot;
+package com.training.rledenev.config;
 
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;

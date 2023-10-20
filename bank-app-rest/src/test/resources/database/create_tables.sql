@@ -46,7 +46,6 @@ CREATE TABLE IF NOT EXISTS agreements
     product_id    int,
     manager_id    int,
     status        varchar(20),
-    period_months int,
     sum           decimal(15, 2),
     start_date    DATE,
     created_at    TIMESTAMP,
