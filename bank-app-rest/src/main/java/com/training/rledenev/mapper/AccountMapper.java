@@ -14,12 +14,6 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface AccountMapper {
 
-    @Mapping(source = "status", target = "status", qualifiedByName = "stringToEnumName")
-    @Mapping(source = "currencyCode", target = "currencyCode", qualifiedByName = "stringToEnumName")
-    @Mapping(source = "balance", target = "balance", qualifiedByName = "doubleToBigDecimal",
-            nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
-    Account mapToEntity(AccountDto accountDto);
-
     @Named("toAccountDto")
     @Mapping(source = "agreement.product.name", target = "productName")
     @Mapping(source = "agreement.product.interestRate", target = "interestRate")
@@ -32,11 +26,6 @@ public interface AccountMapper {
 
     @IterableMapping(qualifiedByName = "toAccountDto")
     List<AccountDto> mapToListDtos(List<Account> accountsOfUser);
-
-    @Named("stringToEnumName")
-    default String stringToEnumName(String value) {
-        return value.toUpperCase().replaceAll("\\s", "_");
-    }
 
     @Named("doubleToBigDecimal")
     default BigDecimal doubleToBigDecimal(Double value) {

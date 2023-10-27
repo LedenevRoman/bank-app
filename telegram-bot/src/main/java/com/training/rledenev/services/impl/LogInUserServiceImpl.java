@@ -3,11 +3,10 @@ package com.training.rledenev.services.impl;
 import com.training.rledenev.entity.User;
 import com.training.rledenev.exceptions.AuthenticationException;
 import com.training.rledenev.security.jwt.JwtProvider;
-import com.training.rledenev.services.UserService;
 import com.training.rledenev.services.LogInUserService;
+import com.training.rledenev.services.UserService;
 import com.training.rledenev.services.chatmaps.ChatIdInLoginMap;
 import com.training.rledenev.services.chatmaps.ChatIdSecurityTokenMap;
-import com.training.rledenev.services.util.BotUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -32,14 +31,14 @@ public class LogInUserServiceImpl implements LogInUserService {
             try {
                 user = userService.findByEmailAndPassword(CHAT_ID_EMAIL_MAP.get(chatId), messageText);
             } catch (AuthenticationException e) {
-                return BotUtils.createSendMessageWithButtons(chatId, AUTHENTICATION_FAILED, List.of(REGISTER_USER, LOG_IN));
+                return createSendMessageWithButtons(chatId, AUTHENTICATION_FAILED, List.of(REGISTER_USER, LOG_IN));
             } finally {
                 CHAT_ID_EMAIL_MAP.remove(chatId);
                 ChatIdInLoginMap.put(chatId, false);
             }
             String token = jwtProvider.generateToken(user.getEmail());
             ChatIdSecurityTokenMap.put(chatId, token);
-            return BotUtils.createSendMessageWithButtons(chatId, String.format(AUTHENTICATION_COMPLETED,
+            return createSendMessageWithButtons(chatId, String.format(AUTHENTICATION_COMPLETED,
                     user.getFirstName(), user.getLastName()) + SELECT_ACTION, getListOfActionsByUserRole(user.getRole()));
         } else {
             CHAT_ID_EMAIL_MAP.put(chatId, messageText);

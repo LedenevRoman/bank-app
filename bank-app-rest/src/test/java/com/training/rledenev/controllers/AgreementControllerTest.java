@@ -144,7 +144,6 @@ class AgreementControllerTest {
     }
 
     @Test
-    @WithUserDetails(value = "james.harris@yopmail.com")
     void shouldBlockAgreement() throws Exception {
         // given
         AgreementDto agreementDto = new AgreementDto();

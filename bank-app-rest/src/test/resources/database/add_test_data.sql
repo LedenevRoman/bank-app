@@ -41,6 +41,6 @@ VALUES
 
 INSERT INTO transactions (debit_account_id, credit_account_id, type, amount, currency_code, debit_balance_difference, credit_balance_difference, description, created_at)
 VALUES
-    (1, 2, 'CASH', 1037.58, 'USD', 1037, 1037, 'for ice cream', '2023-09-03 12:00:00'),
-    (2, 3, 'CASH', 845.67, 'USD', 845, 845, 'for ice cream', '2023-09-03 12:00:00'),
-    (3, 4, 'CASH', 541.63, 'USD', 541, 541, 'for ice cream', '2023-09-03 12:00:00');
+    (2, 3, 'CASH', 1037.58, 'USD', 1037, 1037, 'for ice cream', '2023-09-03 12:00:00'),
+    (3, 4, 'CASH', 845.67, 'USD', 845, 845, 'for ice cream', '2023-09-03 12:00:00'),
+    (4, 5, 'CASH', 541.63, 'USD', 541, 541, 'for ice cream', '2023-09-03 12:00:00');

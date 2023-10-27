@@ -33,4 +33,10 @@ public interface TransactionMapper {
     default Date mapToDate(LocalDateTime localDateTime) {
         return Timestamp.valueOf(localDateTime);
     }
+
+    @Named("stringToEnumName")
+    default String stringToEnumName(String value) {
+        return value.toUpperCase().replaceAll("\\s", "_");
+    }
+
 }

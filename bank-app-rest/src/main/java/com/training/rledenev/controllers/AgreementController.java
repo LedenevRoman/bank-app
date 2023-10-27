@@ -23,19 +23,21 @@ public class AgreementController {
     }
 
     @GetMapping("/new")
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasAuthority('MANAGER')")
     public ResponseEntity<List<AgreementDto>> getNewAgreements() {
         List<AgreementDto> agreementDtos = agreementService.getAgreementsForManager();
         return ResponseEntity.ok().body(agreementDtos);
     }
 
     @PutMapping("/confirm/{id}")
+    @PreAuthorize("hasAuthority('MANAGER')")
     public ResponseEntity<Void> confirmAgreement(@PathVariable(name = "id") Long id) {
         agreementService.confirmAgreementByManager(id);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/block/{id}")
+    @PreAuthorize("hasAuthority('MANAGER')")
     public ResponseEntity<Void> blockAgreement(@PathVariable(name = "id") Long id) {
         agreementService.blockAgreementByManager(id);
         return ResponseEntity.ok().build();

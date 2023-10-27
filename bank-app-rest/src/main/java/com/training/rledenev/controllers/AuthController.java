@@ -3,7 +3,6 @@ package com.training.rledenev.controllers;
 import com.training.rledenev.dto.UserDto;
 import com.training.rledenev.entity.User;
 import com.training.rledenev.entity.enums.Role;
-import com.training.rledenev.security.SecurityToken;
 import com.training.rledenev.security.jwt.JwtProvider;
 import com.training.rledenev.services.UserService;
 import lombok.RequiredArgsConstructor;
@@ -20,10 +19,9 @@ public class AuthController {
     private final JwtProvider jwtProvider;
 
     @PostMapping
-    public ResponseEntity<SecurityToken> auth(@Valid @RequestBody UserDto userDto) {
+    public ResponseEntity<String> auth(@Valid @RequestBody UserDto userDto) {
         User user = userService.findByEmailAndPassword(userDto.getEmail(), userDto.getPassword());
-        String tokenString = jwtProvider.generateToken(user.getEmail());
-        return ResponseEntity.ok().body(new SecurityToken(tokenString));
+        return ResponseEntity.ok().body(jwtProvider.generateToken(user.getEmail()));
     }
 
     @GetMapping

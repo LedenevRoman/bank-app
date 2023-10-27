@@ -20,4 +20,9 @@ public class UserController {
         User user = userService.saveNewClient(userDto);
         return ResponseEntity.created(URI.create("/" + user.getId())).body(user.getId());
     }
+
+    @GetMapping("/{id}")
+    public UserDto getAgreementDtoById(@PathVariable(name = "id") Long id) {
+        return userService.getUserDtoById(id);
+    }
 }

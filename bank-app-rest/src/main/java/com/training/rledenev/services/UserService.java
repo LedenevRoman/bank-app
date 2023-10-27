@@ -10,4 +10,6 @@ public interface UserService {
     User findByEmailAndPassword(String email, String password);
 
     Role getAuthorizedUserRole();
+
+    UserDto getUserDtoById(Long id);
 }

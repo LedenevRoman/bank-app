@@ -5,6 +5,7 @@ import com.training.rledenev.entity.User;
 import com.training.rledenev.entity.enums.Role;
 import com.training.rledenev.entity.enums.Status;
 import com.training.rledenev.exceptions.AuthenticationException;
+import com.training.rledenev.exceptions.UserNotFoundException;
 import com.training.rledenev.mapper.UserMapper;
 import com.training.rledenev.provider.UserProvider;
 import com.training.rledenev.repository.UserRepository;
@@ -54,5 +55,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public Role getAuthorizedUserRole() {
         return userProvider.getCurrentUser().getRole();
+    }
+
+    @Transactional
+    @Override
+    public UserDto getUserDtoById(Long id) {
+        return userMapper.mapToDto(userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found with id " + id)));
     }
 }

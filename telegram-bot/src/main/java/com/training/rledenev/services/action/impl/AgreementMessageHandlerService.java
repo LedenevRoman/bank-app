@@ -22,7 +22,7 @@ public class AgreementMessageHandlerService implements ActionMessageHandlerServi
 
     @Override
     public SendMessage handleMessage(long chatId, String message, Role role) {
-        if (role == Role.CLIENT) {
+        if (role != Role.MANAGER) {
             return createSendMessageWithButtons(chatId, ACCESS_DENIED, getListOfActionsByUserRole(role));
         }
         List<AgreementDto> agreementDtos = agreementService.getAgreementsForManager();
@@ -38,16 +38,7 @@ public class AgreementMessageHandlerService implements ActionMessageHandlerServi
                 return createSendMessageWithButtons(chatId, INCORRECT_NUMBER_INT,
                         getListOfAgreementsIdButtons(agreementDtos));
             }
-            Optional<AgreementDto> optionalAgreementDto = getOptionalFromListById(agreementDtos, agreementId);
-            if (optionalAgreementDto.isPresent()) {
-                AgreementDto agreementDto = optionalAgreementDto.get();
-                ChatIdAgreementIdMap.put(chatId, agreementId);
-                return createSendMessageWithButtons(chatId, getSelectedAgreementMessage(agreementDto),
-                        getConfirmBlockButtons());
-            } else {
-                return createSendMessageWithButtons(chatId, WRONG_AGREEMENT_ID,
-                        getListOfAgreementsIdButtons(agreementDtos));
-            }
+            return getAgreementIdSendMessage(chatId, agreementDtos, agreementId);
         } else {
             agreementId = ChatIdAgreementIdMap.get(chatId);
             agreementDtos.removeIf(a -> a.getId().equals(agreementId));
@@ -66,6 +57,19 @@ public class AgreementMessageHandlerService implements ActionMessageHandlerServi
             }
         }
         return createSendMessageWithButtons(chatId, UNKNOWN_INPUT_MESSAGE, List.of(EXIT));
+    }
+
+    private SendMessage getAgreementIdSendMessage(long chatId, List<AgreementDto> agreementDtos, Long agreementId) {
+        Optional<AgreementDto> optionalAgreementDto = getOptionalFromListById(agreementDtos, agreementId);
+        if (optionalAgreementDto.isPresent()) {
+            AgreementDto agreementDto = optionalAgreementDto.get();
+            ChatIdAgreementIdMap.put(chatId, agreementId);
+            return createSendMessageWithButtons(chatId, getSelectedAgreementMessage(agreementDto),
+                    getConfirmBlockButtons());
+        } else {
+            return createSendMessageWithButtons(chatId, WRONG_AGREEMENT_ID,
+                    getListOfAgreementsIdButtons(agreementDtos));
+        }
     }
 
     private static Optional<AgreementDto> getOptionalFromListById(List<AgreementDto> agreementDtos, long agreementId) {
