@@ -124,7 +124,7 @@ public class AgreementServiceImpl implements AgreementService {
         Account account = new Account();
         account.setClient(userProvider.getCurrentUser());
         String number = RandomStringUtils.randomNumeric(16);
-        while (accountService.checkAccountNumberExists(number)) {
+        while (accountService.isAccountNumberExists(number)) {
             number = RandomStringUtils.randomNumeric(16);
         }
         account.setNumber(number);

@@ -14,6 +14,9 @@ import java.util.Objects;
 @Table(name = "transactions")
 @Getter
 @Setter
+@NamedEntityGraph(name = "transaction-account-graph",
+        attributeNodes = {@NamedAttributeNode(value = "debitAccount"),
+                @NamedAttributeNode(value = "creditAccount")}) //запушил без сабграфа на агримент
 public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

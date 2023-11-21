@@ -9,8 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-
 @RequiredArgsConstructor
 @RestController
 @RequestMapping(path = "/auth")
@@ -19,7 +17,7 @@ public class AuthController {
     private final JwtProvider jwtProvider;
 
     @PostMapping
-    public ResponseEntity<String> auth(@Valid @RequestBody UserDto userDto) {
+    public ResponseEntity<String> auth(@RequestBody UserDto userDto) {
         User user = userService.findByEmailAndPassword(userDto.getEmail(), userDto.getPassword());
         return ResponseEntity.ok().body(jwtProvider.generateToken(user.getEmail()));
     }

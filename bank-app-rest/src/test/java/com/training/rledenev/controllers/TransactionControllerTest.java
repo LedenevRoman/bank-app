@@ -85,10 +85,7 @@ class TransactionControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .with(csrf())
                         .content(transactionDtoJson))
-                .andExpect(status().isCreated())
-                .andReturn()
-                .getResponse()
-                .getContentAsString();
+                .andExpect(status().isCreated());
 
         //then
         String getAccountsOfUserAfterTransactionResult = mockMvc

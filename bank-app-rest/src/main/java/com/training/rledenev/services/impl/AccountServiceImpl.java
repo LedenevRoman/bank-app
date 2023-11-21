@@ -24,8 +24,8 @@ public class AccountServiceImpl implements AccountService {
 
     @Transactional
     @Override
-    public boolean checkAccountNumberExists(String number) {
-        return accountRepository.checkAccountNumberExists(number);
+    public boolean isAccountNumberExists(String number) {
+        return accountRepository.isAccountNumberExists(number);
     }
 
     @Transactional

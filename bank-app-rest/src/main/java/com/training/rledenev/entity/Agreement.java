@@ -14,6 +14,8 @@ import java.util.Objects;
 @Table(name = "agreements")
 @Getter
 @Setter
+@NamedEntityGraph(name = "account-agreement-product-graph",
+        attributeNodes = {@NamedAttributeNode(value = "account"), @NamedAttributeNode(value = "product")})
 public class Agreement {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

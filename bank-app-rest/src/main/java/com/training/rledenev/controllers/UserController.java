@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.net.URI;
 
 @RequiredArgsConstructor
@@ -16,13 +17,13 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/new-client")
-    public ResponseEntity<Long> saveNewClient(@RequestBody UserDto userDto) {
+    public ResponseEntity<Long> saveNewClient(@Valid @RequestBody UserDto userDto) {
         User user = userService.saveNewClient(userDto);
         return ResponseEntity.created(URI.create("/" + user.getId())).body(user.getId());
     }
 
     @GetMapping("/{id}")
-    public UserDto getAgreementDtoById(@PathVariable(name = "id") Long id) {
+    public UserDto getUserDtoById(@PathVariable(name = "id") Long id) {
         return userService.getUserDtoById(id);
     }
 }

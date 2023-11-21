@@ -17,7 +17,8 @@ public interface AccountMapper {
     @Named("toAccountDto")
     @Mapping(source = "agreement.product.name", target = "productName")
     @Mapping(source = "agreement.product.interestRate", target = "interestRate")
-    @Mapping(source = "client", target = "owner", qualifiedByName = "getOwnerFullNameFromClient")
+    @Mapping(source = "client", target = "owner", qualifiedByName = "getUserFullNameFromClient")
+    @Mapping(source = "agreement.manager", target = "manager", qualifiedByName = "getUserFullNameFromClient")
     @Mapping(source = "agreement", target = "paymentTerm", qualifiedByName = "getPaymentTermFromAgreement")
     @Mapping(source = "currencyCode", target = "currencyName", qualifiedByName = "getCurrencyNameFromCode")
     @Mapping(source = "agreement.product.type", target = "type")
@@ -32,9 +33,9 @@ public interface AccountMapper {
         return BigDecimal.valueOf(value);
     }
 
-    @Named("getOwnerFullNameFromClient")
-    default String getOwnerFullNameFromClient(User client) {
-        return String.format("%s %s", client.getFirstName(), client.getLastName());
+    @Named("getUserFullNameFromClient")
+    default String getUserFullNameFromClient(User user) {
+        return String.format("%s %s", user.getFirstName(), user.getLastName());
     }
 
     @Named("getPaymentTermFromAgreement")

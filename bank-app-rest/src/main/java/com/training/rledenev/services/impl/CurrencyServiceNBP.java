@@ -2,19 +2,19 @@ package com.training.rledenev.services.impl;
 
 import com.training.rledenev.entity.enums.CurrencyCode;
 import com.training.rledenev.exceptions.RequestApiException;
+import com.training.rledenev.services.CurrencyApiRequestService;
 import com.training.rledenev.services.CurrencyService;
+import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.math.BigDecimal;
-import java.net.URL;
-import java.util.Scanner;
 
+@RequiredArgsConstructor
 @Service
-public class CurrencyServiceImpl implements CurrencyService {
-    private static final String NATIONAL_BANK_POLAND_API_URL = "http://api.nbp.pl/api/exchangerates/rates/A/";
+public class CurrencyServiceNBP implements CurrencyService {
+    private final CurrencyApiRequestService currencyApiRequestService;
     @Override
     public BigDecimal getRateOfCurrency(String currencyCode) {
         currencyCode = currencyCode.toUpperCase();
@@ -23,21 +23,11 @@ public class CurrencyServiceImpl implements CurrencyService {
         }
         JSONObject currencyJson;
         try {
-            currencyJson = getCurrencyJsonObject(currencyCode);
+            currencyJson = currencyApiRequestService.getCurrencyJsonObject(currencyCode);
         } catch (IOException e) {
             throw new RequestApiException(e.getMessage());
         }
         JSONObject subObject = currencyJson.getJSONArray("rates").getJSONObject(0);
         return BigDecimal.valueOf(subObject.getDouble("mid"));
-    }
-
-    private static JSONObject getCurrencyJsonObject(String message) throws IOException {
-        URL url = new URL(NATIONAL_BANK_POLAND_API_URL + message);
-        Scanner scanner = new Scanner((InputStream) url.getContent());
-        StringBuilder result = new StringBuilder();
-        while (scanner.hasNext()) {
-            result.append(scanner.nextLine());
-        }
-        return new JSONObject(result.toString());
     }
 }

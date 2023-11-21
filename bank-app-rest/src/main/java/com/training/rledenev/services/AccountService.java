@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface AccountService {
 
-    boolean checkAccountNumberExists(String number);
+    boolean isAccountNumberExists(String number);
 
     List<AccountDto> getAccountsForClient();
 

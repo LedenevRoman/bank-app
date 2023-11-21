@@ -7,12 +7,14 @@ import com.training.rledenev.entity.enums.CurrencyCode;
 import com.training.rledenev.entity.enums.TransactionType;
 import com.training.rledenev.exceptions.InsufficientFundsException;
 import com.training.rledenev.mapper.TransactionMapper;
+import com.training.rledenev.provider.UserProvider;
 import com.training.rledenev.repository.AccountRepository;
 import com.training.rledenev.repository.TransactionRepository;
 import com.training.rledenev.services.AccountService;
 import com.training.rledenev.services.CurrencyService;
 import com.training.rledenev.services.TransactionService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +32,7 @@ public class TransactionServiceImpl implements TransactionService {
     private final AccountService accountService;
     private final CurrencyService currencyService;
     private final AccountRepository accountRepository;
+    private final UserProvider userProvider;
 
     @Transactional
     @Override
@@ -42,6 +45,7 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public void createTransaction(TransactionDto transactionDto) {
         Account debitAccount = accountService.getAccountByNumber(transactionDto.getDebitAccountNumber());
+        checkDebitAccountOwner(debitAccount);
         Account creditAccount = accountService.getAccountByNumber(transactionDto.getCreditAccountNumber());
         Transaction transaction = saveTransactionFromDto(transactionDto, debitAccount, creditAccount);
         updateAccount(debitAccount, debitAccount.getBalance().subtract(transaction.getDebitBalanceDifference()));
@@ -109,5 +113,11 @@ public class TransactionServiceImpl implements TransactionService {
         BigDecimal rateAccountCurrency = currencyService.getRateOfCurrency(accountCurrency.toString());
         BigDecimal rateOfConversion = rateTransactionCurrency.divide(rateAccountCurrency, 4, RoundingMode.HALF_UP);
         return amount.multiply(rateOfConversion);
+    }
+
+    private void checkDebitAccountOwner(Account debitAccount) {
+        if (!debitAccount.getClient().equals(userProvider.getCurrentUser())) {
+            throw new AccessDeniedException("Access Denied, wrong account owner");
+        }
     }
 }

@@ -1,7 +1,8 @@
 package com.training.rledenev.controllers;
 
 import com.training.rledenev.entity.enums.CurrencyCode;
-import com.training.rledenev.services.CurrencyService;
+import com.training.rledenev.services.CurrencyApiRequestService;
+import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +13,6 @@ import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
-import java.math.BigDecimal;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -28,16 +27,17 @@ class CurrencyControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private CurrencyService currencyService;
+    private CurrencyApiRequestService currencyApiRequestService;
 
     @Test
     @WithUserDetails(value = "isabella.white@yopmail.com")
     void shouldGetCurrency() throws Exception {
         //given
         String mockEurRate = "4.5";
+        JSONObject mockEurResponse = getMockJsonEurApiResponse(mockEurRate);
 
         //when
-        when(currencyService.getRateOfCurrency(CurrencyCode.EUR.toString())).thenReturn(new BigDecimal(mockEurRate));
+        when(currencyApiRequestService.getCurrencyJsonObject(CurrencyCode.EUR.toString())).thenReturn(mockEurResponse);
         String eurRateResult = mockMvc.perform(MockMvcRequestBuilders.get("/currency/" + CurrencyCode.EUR))
                 .andExpect(status().isOk())
                 .andReturn()
@@ -46,6 +46,21 @@ class CurrencyControllerTest {
 
         //then
         Assertions.assertEquals(mockEurRate, eurRateResult);
-        verify(currencyService, times(1)).getRateOfCurrency(CurrencyCode.EUR.toString());
+        verify(currencyApiRequestService, times(1)).getCurrencyJsonObject(CurrencyCode.EUR.toString());
+    }
+
+    private JSONObject getMockJsonEurApiResponse(String mockEurRate) {
+        return new JSONObject("{\n" +
+                "    \"table\": \"A\",\n" +
+                "    \"currency\": \"euro\",\n" +
+                "    \"code\": \"EUR\",\n" +
+                "    \"rates\": [\n" +
+                "        {\n" +
+                "            \"no\": \"209/A/NBP/2023\",\n" +
+                "            \"effectiveDate\": \"2023-10-27\",\n" +
+                "            \"mid\": " + mockEurRate + "\n" +
+                "        }\n" +
+                "    ]\n" +
+                "}");
     }
 }

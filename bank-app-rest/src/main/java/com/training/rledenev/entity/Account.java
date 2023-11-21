@@ -16,6 +16,10 @@ import java.util.Set;
 @Table(name = "accounts")
 @Getter
 @Setter
+@NamedEntityGraph(name = "user-account-agreement-product-graph",
+        attributeNodes = {@NamedAttributeNode(value = "client"),
+                @NamedAttributeNode(value = "agreement", subgraph = "agreement")},
+        subgraphs = @NamedSubgraph(name = "agreement", attributeNodes = @NamedAttributeNode(value = "product")))
 public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,6 +29,27 @@ public class Account {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "client_id", referencedColumnName = "id")
     private User client;
+
+    @OneToOne(
+            mappedBy = "account",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY
+    )
+    private Agreement agreement;
+
+    @OneToMany(
+            mappedBy = "debitAccount",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY
+    )
+    private Set<Transaction> debitTransactions = new HashSet<>();
+
+    @OneToMany(
+            mappedBy = "creditAccount",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY
+    )
+    private Set<Transaction> creditTransactions = new HashSet<>();
 
     @Column(name = "number")
     private String number;
@@ -45,27 +70,6 @@ public class Account {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
-
-    @OneToMany(
-            mappedBy = "debitAccount",
-            cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY
-    )
-    private Set<Transaction> debitTransactions = new HashSet<>();
-
-    @OneToMany(
-            mappedBy = "creditAccount",
-            cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY
-    )
-    private Set<Transaction> creditTransactions = new HashSet<>();
-
-    @OneToOne(
-            mappedBy = "account",
-            cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY
-    )
-    private Agreement agreement;
 
     @Override
     public boolean equals(Object o) {

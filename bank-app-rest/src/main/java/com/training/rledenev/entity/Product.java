@@ -22,6 +22,13 @@ public class Product {
     @Column(name = "id", nullable = false, updatable = false)
     private Long id;
 
+    @OneToMany(
+            mappedBy = "product",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY
+    )
+    private Set<Agreement> agreements = new HashSet<>();
+
     @Column(name = "name")
     private String name;
 
@@ -47,13 +54,6 @@ public class Product {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
-
-    @OneToMany(
-            mappedBy = "product",
-            cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY
-    )
-    private Set<Agreement> agreements = new HashSet<>();
 
     public void addAgreement(Agreement agreement) {
         this.agreements.add(agreement);

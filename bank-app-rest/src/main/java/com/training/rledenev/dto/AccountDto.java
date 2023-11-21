@@ -8,6 +8,7 @@ import java.time.LocalDate;
 public class AccountDto {
     private String number;
     private String owner;
+    private String manager;
     private String productName;
     private Double interestRate;
     private LocalDate startDate;
