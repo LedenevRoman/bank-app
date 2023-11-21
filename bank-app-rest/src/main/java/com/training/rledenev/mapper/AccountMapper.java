@@ -18,7 +18,8 @@ public interface AccountMapper {
     @Mapping(source = "agreement.product.name", target = "productName")
     @Mapping(source = "agreement.product.interestRate", target = "interestRate")
     @Mapping(source = "client", target = "owner", qualifiedByName = "getUserFullNameFromClient")
-    @Mapping(source = "agreement.manager", target = "manager", qualifiedByName = "getUserFullNameFromClient")
+    @Mapping(source = "agreement.manager", target = "manager", qualifiedByName = "getUserFullNameFromClient",
+            nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
     @Mapping(source = "agreement", target = "paymentTerm", qualifiedByName = "getPaymentTermFromAgreement")
     @Mapping(source = "currencyCode", target = "currencyName", qualifiedByName = "getCurrencyNameFromCode")
     @Mapping(source = "agreement.product.type", target = "type")
