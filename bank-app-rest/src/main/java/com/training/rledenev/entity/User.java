@@ -12,6 +12,7 @@ import java.util.Objects;
 import java.util.Set;
 
 import static javax.persistence.CascadeType.*;
+import static javax.persistence.CascadeType.REFRESH;
 
 @Entity
 @Table(name = "users")
@@ -22,6 +23,20 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, updatable = false)
     private Long id;
+
+    @OneToMany(
+            mappedBy = "client",
+            cascade = {MERGE, PERSIST, REFRESH},
+            fetch = FetchType.LAZY
+    )
+    private Set<Account> clientAccounts = new HashSet<>();
+
+    @OneToMany(
+            mappedBy = "manager",
+            cascade = {MERGE, PERSIST, REFRESH},
+            fetch = FetchType.LAZY
+    )
+    private Set<Agreement> managerAgreements = new HashSet<>();
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
@@ -54,20 +69,6 @@ public class User {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
-
-    @OneToMany(
-            mappedBy = "client",
-            cascade = {MERGE, PERSIST, REFRESH},
-            fetch = FetchType.LAZY
-    )
-    private Set<Account> clientAccounts = new HashSet<>();
-
-    @OneToMany(
-            mappedBy = "manager",
-            cascade = {MERGE, PERSIST, REFRESH},
-            fetch = FetchType.LAZY
-    )
-    private Set<Agreement> managerAgreements = new HashSet<>();
 
     @Override
     public boolean equals(Object o) {
