@@ -11,7 +11,7 @@ import org.mapstruct.Named;
 import java.util.List;
 
 @Mapper(componentModel = "spring")
-public interface ProductMapper {
+public interface ProductMapper extends MapperDefault {
 
     @Named("toProductDto")
     @Mapping(source = "type", target = "type", qualifiedByName = "enumGetName")

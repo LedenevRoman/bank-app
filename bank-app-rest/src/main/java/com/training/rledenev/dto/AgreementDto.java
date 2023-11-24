@@ -8,7 +8,8 @@ public class AgreementDto {
     private Double sum;
     private String productType;
     private String currencyCode;
+    private String status;
+    private Double interestRate;
     private Integer periodMonths;
     private String productName;
-    private Double interestRate;
 }

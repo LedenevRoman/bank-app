@@ -16,11 +16,11 @@ import java.util.Arrays;
 @Slf4j
 public class LoggingAspect {
 
-    @Pointcut("execution(public * com.training.rledenev.controllers.*.*(..))")
+    @Pointcut("execution(public * com.training.rledenev.controller.*.*(..))")
     public void controllerLog() {
     }
 
-    @Pointcut("execution(public * com.training.rledenev.services.*.*(..))")
+    @Pointcut("execution(public * com.training.rledenev.service.*.*(..))")
     public void serviceLog() {
     }
 

@@ -12,8 +12,8 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
-@Mapper(componentModel = "spring", uses = AccountMapper.class)
-public interface TransactionMapper {
+@Mapper(componentModel = "spring")
+public interface TransactionMapper extends MapperDefault {
 
     @Named("toTransactionDto")
     @Mapping(source = "debitAccount.number", target = "debitAccountNumber")
@@ -33,10 +33,4 @@ public interface TransactionMapper {
     default Date mapToDate(LocalDateTime localDateTime) {
         return Timestamp.valueOf(localDateTime);
     }
-
-    @Named("stringToEnumName")
-    default String stringToEnumName(String value) {
-        return value.toUpperCase().replaceAll("\\s", "_");
-    }
-
 }

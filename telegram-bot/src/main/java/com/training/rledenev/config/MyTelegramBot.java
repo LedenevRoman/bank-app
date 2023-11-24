@@ -1,6 +1,6 @@
 package com.training.rledenev.config;
 
-import com.training.rledenev.services.UpdateHandlerService;
+import com.training.rledenev.service.UpdateHandlerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;

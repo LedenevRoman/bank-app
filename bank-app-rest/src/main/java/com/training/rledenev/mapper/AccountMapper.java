@@ -7,12 +7,11 @@ import com.training.rledenev.entity.User;
 import com.training.rledenev.entity.enums.CurrencyCode;
 import org.mapstruct.*;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
 @Mapper(componentModel = "spring")
-public interface AccountMapper {
+public interface AccountMapper extends MapperDefault {
 
     @Named("toAccountDto")
     @Mapping(source = "agreement.product.name", target = "productName")
@@ -28,11 +27,6 @@ public interface AccountMapper {
 
     @IterableMapping(qualifiedByName = "toAccountDto")
     List<AccountDto> mapToListDtos(List<Account> accountsOfUser);
-
-    @Named("doubleToBigDecimal")
-    default BigDecimal doubleToBigDecimal(Double value) {
-        return BigDecimal.valueOf(value);
-    }
 
     @Named("getUserFullName")
     default String getUserFullName(User user) {

@@ -1,8 +1,9 @@
 package com.training.rledenev.security.jwt;
 
-import com.training.rledenev.entity.security.CustomUserDetails;
-import com.training.rledenev.services.security.CustomUserDetailsServiceImpl;
+import com.training.rledenev.security.CustomUserDetails;
+import com.training.rledenev.security.CustomUserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -19,7 +20,6 @@ import static org.springframework.util.StringUtils.hasText;
 @RequiredArgsConstructor
 @Component
 public class JwtFilter extends OncePerRequestFilter {
-    public static final String AUTHORIZATION = "Authorization";
     private final JwtProvider jwtProvider;
     private final CustomUserDetailsServiceImpl userDetailsService;
 
@@ -42,7 +42,7 @@ public class JwtFilter extends OncePerRequestFilter {
     }
 
     private String getTokenFromRequest(HttpServletRequest request) {
-        String bearer = request.getHeader(AUTHORIZATION);
+        String bearer = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (hasText(bearer) && bearer.startsWith("Bearer ")) {
             return bearer.substring(7);
         }

@@ -6,8 +6,8 @@ import org.mapstruct.*;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring", uses = AccountMapper.class)
-public interface AgreementMapper {
+@Mapper(componentModel = "spring")
+public interface AgreementMapper extends MapperDefault {
 
     @Mapping(source = "sum", target = "sum", qualifiedByName = "doubleToBigDecimal",
             nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)

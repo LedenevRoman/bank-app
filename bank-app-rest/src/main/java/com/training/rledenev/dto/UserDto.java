@@ -12,11 +12,11 @@ import java.util.Objects;
 @Setter
 public class UserDto {
     @NotBlank(message = "First name can not be empty")
-    @Pattern(regexp = "[A-Za-z]+", message = "First name must contain only letters of the English alphabet")
+    @Pattern(regexp = "[A-Za-z]*", message = "First name must contain only letters of the English alphabet")
     private String firstName;
 
     @NotBlank(message = "Last name can not be empty")
-    @Pattern(regexp = "[A-Za-z]+", message = "Last name must contain only letters of the English alphabet")
+    @Pattern(regexp = "[A-Za-z]*", message = "Last name must contain only letters of the English alphabet")
     private String lastName;
 
     @Email
