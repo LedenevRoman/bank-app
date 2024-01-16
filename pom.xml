@@ -27,7 +27,7 @@
         <mysql-connector.version>8.0.33</mysql-connector.version>
         <telegrambots.version>6.8.0</telegrambots.version>
         <jjwt.version>0.9.1</jjwt.version>
-        <lombok.version>1.18.28</lombok.version>
+        <lombok.version>1.18.30</lombok.version>
         <json.version>20230618</json.version>
         <mapstruct.version>1.5.5.Final</mapstruct.version>
         <h2.version>2.2.224</h2.version>
@@ -85,14 +85,4 @@
             <version>${snakeyaml.version}</version>
         </dependency>
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
-
 </project>
